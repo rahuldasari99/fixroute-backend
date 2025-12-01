@@ -1488,10 +1488,10 @@ app.post("/api/create-payment", async (req, res) => {
     const shortReceipt = "rcpt_" + bill_id.substring(0, 10);
 
     const order = await razor.orders.create({
-      amount: Number(bill.amount) * 100, // FIX: using bill.amount
-      currency: "INR",
-      receipt: shortReceipt
-    });
+  amount: Math.round(Number(bill.amount) * 100), // MUST BE INTEGER
+  currency: "INR",
+  receipt: shortReceipt
+});
 
     return res.json({
       success: true,
