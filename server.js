@@ -1487,11 +1487,17 @@ app.post("/api/create-payment", async (req, res) => {
     // FIX: Razorpay receipt must be < 40 characters
     const shortReceipt = "rcpt_" + bill_id.substring(0, 10);
 
+    // const order = await razor.orders.create({
+    //   amount: Number(bill.amount) * 100, // FIX: using bill.amount
+    //   currency: "INR",
+    //   receipt: shortReceipt
+    // });
     const order = await razor.orders.create({
   amount: Math.round(Number(bill.amount) * 100), // MUST BE INTEGER
   currency: "INR",
   receipt: shortReceipt
 });
+
 
     return res.json({
       success: true,
