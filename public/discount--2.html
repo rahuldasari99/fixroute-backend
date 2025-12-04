@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discount | Vehicle Rescue</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    *{
+    font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+    }
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      /* background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); */
+      background-color: rgba(201, 201, 201, 0.46);
+      color: #fff;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    .nav-link{
+  color: white;
+}
+.nav-item :hover{
+  color: orangered;
+}
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: #ffcc00;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      transition: color 0.3s;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #ffcc00;
+    }
+
+/*============DISCOUNT START=============*/
+        .discount-section {
+  position: relative;
+  padding: 80px 5%;
+  color: #fff;
+  overflow: hidden;
+}
+
+.discount-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("https://media.istockphoto.com/id/1390835938/vector/studio-interior-with-carbon-fiber-texture-modern-carbon-fiber-textured-black-interior-with.jpg?s=612x612&w=0&k=20&c=kgq6k3A8I9EhsJmk-KTgM57nD-VcTFGu-suNJKvFt0M=") center/cover no-repeat;
+  filter: brightness(0.4);
+  z-index: -1;
+}
+
+.countdown-box {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.countdown-box h2 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+#countdown {
+    color: gold;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.discount-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.discount-text {
+  flex: 1;
+  max-width: 500px;
+}
+
+.discount-text h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.discount-text p {
+
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.discount-text ul {
+  margin-bottom: 25px;
+}
+
+.discount-text ul li {
+    color: gold;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+
+
+.discount-video {
+  flex: 1;
+  max-width: 500px;
+}
+
+.discount-video video {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+}
+
+/*=======pop up cards============*/
+/* Button */
+.grab-btn {
+  background: orangered;
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.grab-btn:hover {
+  background: #ffaa00;
+}
+
+
+/* Popup full-screen overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px); /* Background blur */
+  background: rgba(0,0,0,0.55); /* Transparent dark */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+
+/* Popup box */
+.popup-content {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(20px);
+  padding: 30px;
+  width: 70%;
+  border-radius: 25px;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(255,255,255,0.1);
+  animation: popIn 0.4s ease;
+}
+
+/* Cards */
+.offer-cards {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.offer-card {
+  flex: 1;
+  min-width: 250px;
+  background: rgba(255,255,255,0.12);
+  padding: 20px;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.offer-card h3 {
+  margin-bottom: 8px;
+}
+
+/* Close Button */
+.close-btn {
+  margin-top: 25px;
+  background: orangered;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.close-btn:hover {
+  background: #dd2222;
+}
+
+/* Popup animation */
+@keyframes popIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+/* Responsive */
+@media (max-width: 900px) {
+  .discount-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .discount-text {
+    max-width: 100%;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+
+    <!-- navigation bar start -->
+    <nav class="navbar navbar-expand-sm bg-black sticky-top py-1">
+      <div class="container navedit">
+        <a class="navbar-brand text-white" href="#"
+          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
+        >
+        <button
+          class="bi bi-list d-lg-none d-md-none"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        ></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+           
+            
+            <li class="nav-item">
+              <a class="nav-link" href="index--1.html">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">CONTACT US</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">ABOUT</a>
+            </li>
+         
+          </ul>
+         
+        </div>
+        
+      </div>
+    </nav>
+
+  <!-- navigation bar end -->
+
+
+    <section class="discount-section">
+  <div class="discount-bg"></div>
+
+  <!-- Countdown Timer -->
+  <div class="countdown-box">
+    <h2><span style="font-size: 60px;">L</span>imited <span style="font-size: 60px;">T</span>ime <span style="font-size: 60px;">D</span>iscounts</h2>
+    <div id="countdown"></div>
+  </div>
+
+  <div class="discount-content">
+    <!-- Left Text -->
+    <div class="discount-text">
+      <h1><span style="font-size: 100px;">G</span>et Flat <span style="color: gold;">50%</span> Off on All Breakdown Services</h1>
+      <p>
+        Book now and get instant roadside support at discounted prices.
+        Offer valid for a limited time only.
+      </p>
+
+      <ul>
+        <li>✔ Fast Rescue Team</li>
+        <li>✔ On-spot Fix</li>
+        <li>✔ Fuel Support</li>
+        <li>✔ Engine & Battery Repair</li>
+      </ul>
+
+      
+      <button class="grab-btn" onclick="openOffers()">Grab Offer Now</button>
+
+    </div>
+
+    <!-- Right Video -->
+    <div class="discount-video">
+      <video autoplay muted loop playsinline>
+        <source src="asserts/Black And Grey Modern Car Repair Service Facebook Ad.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+<!--pop up cards start-->
+<!-- Popup Overlay -->
+<div id="offerPopup" class="popup-overlay">
+  <div class="popup-content">
+    
+    <h2>Exclusive Offers</h2>
+
+    <div class="offer-cards">
+      <div class="offer-card">
+        <h3>20% OFF First Service</h3>
+        <p>Applies to emergency breakdown service.</p>
+      </div>
+
+      <div class="offer-card">
+        <h3>Free Fuel Delivery</h3>
+        <p>Limited-time offer for all members.</p>
+      </div>
+
+      <div class="offer-card">
+        <h3>Free Vehicle Checkup</h3>
+        <p>Full inspection done by certified mechanics.</p>
+      </div>
+    </div>
+
+    <button class="close-btn" onclick="closeOffers()">Close</button>
+
+  </div>
+</div>
+<script>
+function openOffers() {
+  document.getElementById("offerPopup").style.display = "flex";
+}
+
+function closeOffers() {
+  document.getElementById("offerPopup").style.display = "none";
+}
+</script>
+
+<!--pop up cards ends-->
+
+<script>
+function startCountdown() {
+  const endTime = new Date().getTime() + (24 * 60 * 60 * 1000);
+
+  setInterval(() => {
+    let now = new Date().getTime();
+    let distance = endTime - now;
+
+    let hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML =
+      `${hrs}h : ${mins}m : ${secs}s`;
+  }, 1000);
+}
+
+startCountdown();
+</script>
+
+<!--===========footer start===========-->
+
+  <!-- footer start -->
+<footer class="footer p-4 border-top footer-txt bg-black">
+      <div class="container">
+        <!-- footer-navigation start -->
+        <div class="row">
+          <!-- col-1 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <!-- brand-information -->
+             <a class="navbar-brand text-white" href="#"
+          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
+        >
+
+            <!-- brand-title -->
+            <p class="text-lead text-capitalize mb-2">
+              FixRoute Analytics helps you understand real-time service demand, track technician performance, and identify high-request zones. With data-driven insights, your team can respond faster, allocate technicians better, and deliver a smoother on-road assistance experience.
+            </p>
+            <!-- social media icons -->
+            <div class="footer-social-icons my-3">
+              <i class="fs-4 p-2 border rounded bi bi-whatsapp"></i>
+              <i class="fs-4 p-2 border rounded bi bi-facebook"></i>
+              <i class="fs-4 p-2 border rounded bi bi-instagram"></i>
+              <i class="fs-4 p-2 border rounded bi bi-linkedin"></i>
+            </div>
+          </div>
+          <!-- col-2 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Quick Links</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">Home</li>
+              <li class="p-1">Services</li>
+            
+              <li class="p-1">Analytics</li>
+              <li class="p-1">Contact</li>
+            </ul>
+          </div>
+          <!-- col-3 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Services</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">Insights & Reports</li>
+              <li class="p-1">Recommendations</li>
+              <li class="p-1">usage dashboard</li>
+              <li class="p-1">Visualizations</li>
+            </ul>
+          </div>
+          <!-- col-4 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Get to know us</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">About Fixroute</li>
+              <li class="p-1">Terms&Conditions</li>
+              <li class="p-1">Privacy Policy</li>
+
+              <li class="p-1">Careers</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-top  border-2" />
+        <!-- footer-navigation end -->
+        <div class="text-center">
+          <p class="fs-6 fw-bold">
+            Copyright &copy; 2025 fixroute. All Right Reserved
+          </p>
+        </div>
+      </div>
+    </footer>
+
+
+  <!-- footer end -->
+<!--============footer end================-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
+</body>
+</html>

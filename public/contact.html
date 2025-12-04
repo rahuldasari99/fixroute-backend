@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact Us | Vehicle Rescue</title>
+  <link rel="stylesheet" href="contact.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    *{
+    font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+    }
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      /* background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); */
+      background-color: rgb(255, 255, 255);
+      color: #fff;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    .nav-link{
+  color: white;
+}
+.nav-item :hover{
+  color: orangered;
+}
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: #ffcc00;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      transition: color 0.3s;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #ffcc00;
+    }
+
+    /* CONTACT HEADER */
+    .contact-hero {
+      padding: 100px 10%;
+      text-align: center;
+    }
+
+    .contact-hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      color: orangered;
+      animation: fadeInDown 1s ease;
+    }
+
+    .contact-hero p {
+      font-size: 1.2rem;
+      color: rgb(0, 0, 0);
+      animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+/* CONTACT SECTION */
+.contact-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 60px 10%;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: stretch; /* ➜ Makes both cards equal height */
+}
+
+    /* Contact Info Card */
+.contact-info {
+  flex: 1;
+  min-width: 350px;
+  padding: 30px;
+  border-radius: 15px;
+  background: rgb(255, 255, 255);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+    .contact-info h2 {
+      color: orangered;
+    }
+
+    .contact-info p {
+      margin: 10px 0;
+      color: rgba(0, 0, 0, 0.427);
+    }
+
+    .contact-info .item {
+      margin: 15px 0;
+    }
+
+    .contact-info .item strong {
+      color: orangered;
+    }
+
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Contact card image */
+.contact-img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+/* Contact icons */
+.item-icon {
+  width: 30px;
+  margin-right: 10px;
+  filter: drop-shadow(0 0 6px #ffcc00);
+}
+
+
+/*================chat countiner ==================*/
+/* AI Chatbot Container */
+.chat-container {
+    width: 350px;
+    height: 500px;
+    background: #111;
+    border-radius: 15px;
+    padding: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.header {
+    background: #1e1e1e;
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+    border-bottom: 1px solid #333;
+    color: white;
+}
+
+#messages {
+    height: 350px;
+    padding: 15px;
+    overflow-y: auto;
+    color: white;
+}
+
+.user-msg, .bot-msg {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.user-msg {
+    background: #4e8cff;
+    margin-left: auto;
+}
+
+.bot-msg {
+    background: #222;
+    margin-right: auto;
+}
+
+.input-area {
+    display: flex;
+    padding: 10px;
+    background: #1e1e1e;
+    border-top: 1px solid #333;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+.input-area button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    background: #4e8cff;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+/*Right side*/
+/* Contact Form */
+form {
+  flex: 1;
+  min-width: 350px;
+  padding: 30px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  animation: fadeInRight 1s ease;
+}
+
+/* Input Fields */
+form input,
+form textarea {
+  width: 90%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  font-size: 15px;
+  background: #ffffff;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+/* On Focus Effect */
+form input:focus,
+form textarea:focus {
+  box-shadow: 0 0 10px rgba(0, 115, 255, 0.4);
+  transform: scale(1.02);
+}
+
+/* Button Style */
+form button {
+  background: orangered;
+  margin-top: 20px;
+  padding: 12px;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover Button */
+form button:hover {
+  background: orange;
+  transform: scale(1.05);
+}
+/* Form header image */
+.form-img {
+  width: 100px;
+  margin: 0 auto 10px;
+  display: block;
+}
+
+/* Responsive */
+@media(max-width: 480px) {
+  form {
+    padding: 20px;
+  }
+}
+
+
+
+
+    /* Map Section */
+    .map {
+      margin: 50px 10%;
+      border-radius: 15px;
+      overflow: hidden;
+      animation: fadeInUp 1.2s ease;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      margin-top: 50px;
+      color: #bbb;
+    }
+
+/*lazy page*/
+    .lazy-load {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+.loaded {
+    opacity: 1;
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- navigation bar start -->
+    <nav class="navbar navbar-expand-sm bg-black sticky-top py-1">
+      <div class="container navedit">
+        <a class="navbar-brand text-white" href="#"
+          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
+        >
+        <button
+          class="bi bi-list d-lg-none d-md-none"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        ></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+           
+            <li class="nav-item">
+              <a class="nav-link" href="index--1.html">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">OUR AI-PAGE</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">ABOUT</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="contact.html">CONTACT US</a>
+             </li>
+         
+          </ul>
+         
+        </div>
+        
+      </div>
+    </nav>
+
+  <!-- navigation bar end -->
+
+  
+<!--===================heros section start================================-->
+    <div class="spline-container">
+        <!-- <h1>Dinesh Reddy</h1> -->
+
+        <iframe  class="herosection"
+            src="https://my.spline.design/boxeshover-KGXCkl3VZrorKkrTyXP3k4Y9/"
+            frameborder="0"
+            style="border: none; outline: none;">
+        </iframe>
+    </div>
+
+     <style>
+    
+
+        .spline-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .herosection{
+          background: black;
+        }
+    </style>
+<!--===================heros section End================================-->
+
+  
+
+  <!-- CONTACT HEADER -->
+  <div class="contact-hero">
+    <h1>Contact Us</h1>
+    <p>We’re here to help you anytime, anywhere — reach out to us instantly.</p>
+  </div>
+
+ <div class="contact-container">
+
+  <!-- Left Contact Info -->
+  <div class="contact-info" data-aos="fade-right">
+
+
+    <h2>Get In Touch</h2>
+    <p>We’re available 24/7 — reach out anytime.</p>
+
+    <div class="item">
+      <img src="asserts/icons8-email-64.png" class="item-icon">
+      <strong>Email:</strong>
+      <p>vehiclerescue.support@gmail.com</p>
+    </div>
+
+    <div class="item">
+      <img src="asserts/icons8-phone-call.gif" class="item-icon">
+      <strong>Phone:</strong>
+      <p>+91 98765 43210</p>
+    </div>
+
+    <div class="item">
+      <img src="asserts/icons8-office.gif" class="item-icon">
+      <strong>Office:</strong>
+      <p>Hyderabad, Telangana, India</p>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+   <form action="https://api.web3forms.com/submit" method="POST" data-aos="fade-left">
+
+  <img src="asserts/icons8-person-94.png" class="form-img">
+
+  <input type="hidden" name="access_key" value="cf3199ef-90ba-4770-814d-50d3df62ab98">
+  <input type="hidden" name="subject" value="New Contact Form Message">
+  <input type="hidden" name="captcha" value="false">
+
+  <input type="text" name="name" placeholder="Your Name" required />
+  <input type="email" name="email" placeholder="Your Email" required />
+  <textarea name="message" placeholder="Your Message..." rows="5" required></textarea>
+
+  <button type="submit">Send Message</button>
+</form>
+
+<script>
+  window.addEventListener("load", function () {
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("success") === "true") {
+      alert("Your message has been sent successfully!");
+    }
+  });
+</script>
+
+
+
+  </div>
+
+  <!-- GOOGLE MAP EMBED -->
+  <!-- <div class="map" data-aos="fade-up"> -->
+    <!-- LIVE USER LOCATION MAP -->
+<!-- <div class="map" data-aos="fade-up">
+  <div id="liveMap" style="width:100%; height:400px; border-radius:15px;"></div>
+</div>
+
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.689396353945!2d78.3895318141637!3d17.434412506207495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93e5511e8de1%3A0xbee94d55bdacac16!2sHyderabad%20City!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin"
+      width="100%" height="350" style="border:0;" allowfullscreen loading="lazy">
+    </iframe>
+  </div> -->
+  <!-- <div id="liveMap" style="width:100%; height:400px; border-radius: 15px;"></div> -->
+
+
+  <!-- <script async 
+src="https://maps.googleapis.com/maps/api/js?key=YOUR_NEW_API_KEY&callback=initLiveMap">
+</script> -->
+
+<div style="width: 100%; padding: 0 150px; height: 400px;">
+  <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.2751287438286!2d78.40061497547566!3d17.494375083411143!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb91f20663c46d%3A0x846796db82f76735!2sSocial%20Prachar!5e0!3m2!1sen!2sin!4v1764238932617!5m2!1sen!2sin" 
+    width="100%" 
+    height="100%" 
+    style="border:0;" 
+    allowfullscreen="" 
+    loading="lazy" 
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+</div>
+
+
+
+
+
+
+<!---------------------- chatbot start -------------------->
+
+<!--======================================chat-bot-ai start====================================================================-->
+    <style>
+/*================ Chat Container =================*/
+.chat-container {
+    width: 350px;
+    height: 500px;
+    background: black;
+    border-radius: 15px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;   /* ✅ Now it will stay bottom-right */
+    overflow: hidden;
+    z-index: 9999;
+}
+
+
+
+.header {
+    background: #000000;
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+    border-bottom: 1px solid #333;
+    color: white;
+}
+
+#messages {
+    height: 350px;
+    padding: 15px;
+    overflow-y: auto;
+    color: white;
+}
+
+.user-msg, .bot-msg {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.user-msg {
+    background: orange;
+    margin-left: auto;
+}
+
+.bot-msg {
+    background: orangered;
+    margin-right: auto;
+}
+
+.input-area {
+    display: flex;
+    height: 60px;
+    padding: 10px;
+    background: #1e1e1e;
+    border-top: 1px solid #333;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    
+}
+
+.input-area button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    background: orangered;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+    </style>
+    <!-- ================= CHAT WRAPPER ================= -->
+<div id="chatWrapper" style="display:none;">
+    <div class="chat-container">
+
+        <!-- Background bot -->
+        <!-- <iframe
+            src="https://my.spline.design/nexbotrobotcharacterconcept-EcRmIIsM7vItqrJ3Wx6ykPjW/"
+            frameborder="0"
+            allow="fullscreen"
+            style="
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                border:0;
+                opacity:0.35;
+                pointer-events:none;
+                z-index:0;
+            ">
+        </iframe> -->
+
+        <!-- Header + Close Button -->
+        <div class="header" style="position:relative; z-index:10; font-weight: bold;">
+            ASK <span style="color: orangered; font-size: 35px;" >ME...?</span>
+
+            <button id="closeChatBtn" style="
+                position:absolute;
+                top:10px;
+                right:10px;
+                background:transparent;
+                color:rgb(255, 255, 255);
+                border:none;
+                font-size:22px;
+                cursor:pointer;
+            ">✖</button>
+        </div>
+
+        <div id="messages" style="position:relative; z-index:10;"></div>
+
+        <div class="input-area" style="position:relative; z-index:10;">
+            <input id="userInput" type="text" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<!-- ================= FLOATING ROBOT BUTTON ================= -->
+<div id="robotBox" style="
+    position: fixed;
+    bottom: -56px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    /* border: 2px solid red; */
+    overflow: hidden;
+    z-index: 9999; ">
+
+    <iframe 
+      src="https://my.spline.design/genkubgreetingrobot-23ytRLSuyyrwaASdfVBodbGD/"
+      frameborder="0"
+      style="width:100%; height:100%; border:0;">
+    </iframe>
+
+    <button id="chatBotOverlay" style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    "></button>
+</div>
+
+
+
+
+<!-- ================= AI BOT LOGIC ================= -->
+<script>
+
+// OPEN CHAT → hide robot
+function openChat() {
+    document.getElementById("chatWrapper").style.display = "block";
+    document.getElementById("robotBox").style.display = "none";
+}
+
+// CLOSE CHAT → show robot
+function closeChat() {
+    document.getElementById("chatWrapper").style.display = "none";
+    document.getElementById("robotBox").style.display = "block";
+}
+
+// Attach button events
+document.getElementById("chatBotOverlay").addEventListener("click", openChat);
+document.getElementById("closeChatBtn").addEventListener("click", closeChat);
+
+
+
+
+// ====== AI CHAT SYSTEM ======
+const responses = [
+    { keywords: ["hi","hello","hey"], reply:"Hello! Welcome to On-Road Automotive Rescue. How can I assist you today?" },
+    { keywords: ["good morning","good afternoon","good evening"], reply:"Greetings! How may I support you?" },
+
+    { keywords: ["what is this","about project","what do you do"], reply:"This system helps users get instant roadside assistance such as puncture fix, fuel delivery, engine help & more." },
+
+    { keywords: ["how to book","book service"], reply:"Login → Select issue → Allow GPS → Submit request. Nearest mechanic will be assigned instantly." },
+
+    { keywords: ["puncture","tyre","tire"], reply:"Select 'Tyre Rescue' and we’ll send a technician to your location." },
+    { keywords: ["petrol","fuel","out of fuel"], reply:"Select 'Fuel Support' to get immediate petrol delivery." },
+    { keywords: ["battery","no start"], reply:"Choose 'Battery Jumpstart' to get fast help." },
+    { keywords: ["engine","breakdown"], reply:"Select 'Engine Support'. A nearby expert will reach you ASAP." },
+
+    { keywords: ["track","mechanic"], reply:"You can track your mechanic live from your dashboard." },
+
+    { keywords: ["payment","pay"], reply:"We support UPI, cards, wallets & online payments." },
+
+    { keywords: ["location","gps"], reply:"We auto-detect your GPS location to assign the nearest mechanic." },
+
+    { keywords: ["subscription","premium"], reply:"Premium 24x7 rescue subscription plans coming soon!" },
+
+    { keywords: ["future","ai"], reply:"We’re developing an AI system that will detect vehicle issues automatically." },
+
+    { keywords: ["name","who are you"], reply:"I am the On-Road Rescue AI Assistant." },
+
+    { keywords: ["bye"], reply:"Goodbye! Drive safe!" },
+    { keywords: ["thanks","thank you"], reply:"Happy to help! 🚗⚙️" }
+];
+
+const fallbackReplies = [
+    "I'm not sure I understand, can you explain more?",
+    "Interesting! Tell me more.",
+    "I didn’t get that, but I'm here to help."
+];
+
+function getBotReply(message) {
+    message = message.toLowerCase();
+    for (let r of responses) {
+        for (let key of r.keywords) {
+            if (message.includes(key)) return r.reply;
+        }
+    }
+    return fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
+}
+
+function sendMessage() {
+    let input = document.getElementById("userInput");
+    let text = input.value.trim();
+    if (text === "") return;
+
+    let messages = document.getElementById("messages");
+    messages.innerHTML += `<div class='user-msg'>${text}</div>`;
+
+    let reply = getBotReply(text);
+
+    setTimeout(() => {
+        messages.innerHTML += `<div class='bot-msg'>${reply}</div>`;
+        messages.scrollTop = messages.scrollHeight;
+    }, 300);
+
+    input.value = "";
+}
+
+</script>
+
+<!--========================ai chat-bot- End=============================================-->
+
+<!-----------------------chatbot end----------------------->
+
+
+<!--===========footer start===========-->
+
+  <!-- footer start -->
+<footer class="footer p-4 border-top footer-txt bg-black">
+      <div class="container">
+        <!-- footer-navigation start -->
+        <div class="row">
+          <!-- col-1 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <!-- brand-information -->
+             <a class="navbar-brand text-white" href="#"
+          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
+        >
+
+            <!-- brand-title -->
+            <p class="text-lead text-capitalize mb-2">
+              FixRoute Analytics helps you understand real-time service demand, track technician performance, and identify high-request zones. With data-driven insights, your team can respond faster, allocate technicians better, and deliver a smoother on-road assistance experience.
+            </p>
+            <!-- social media icons -->
+            <div class="footer-social-icons my-3">
+              <i class="fs-4 p-2 border rounded bi bi-whatsapp"></i>
+              <i class="fs-4 p-2 border rounded bi bi-facebook"></i>
+              <i class="fs-4 p-2 border rounded bi bi-instagram"></i>
+              <i class="fs-4 p-2 border rounded bi bi-linkedin"></i>
+            </div>
+          </div>
+          <!-- col-2 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Quick Links</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">Home</li>
+              <li class="p-1">Services</li>
+            
+              <li class="p-1">Analytics</li>
+              <li class="p-1">Contact</li>
+            </ul>
+          </div>
+          <!-- col-3 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Services</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">Insights & Reports</li>
+              <li class="p-1">Recommendations</li>
+              <li class="p-1">usage dashboard</li>
+              <li class="p-1">Visualizations</li>
+            </ul>
+          </div>
+          <!-- col-4 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Get to know us</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">About Fixroute</li>
+              <li class="p-1">Terms&Conditions</li>
+              <li class="p-1">Privacy Policy</li>
+
+              <li class="p-1">Careers</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-top  border-2" />
+        <!-- footer-navigation end -->
+        <div class="text-center">
+          <p class="fs-6 fw-bold">
+            Copyright &copy; 2025 fixroute. All Right Reserved
+          </p>
+        </div>
+      </div>
+    </footer>
+
+
+  <!-- footer end -->
+<!--============footer end================-->
+
+  <!-- AOS Script -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script> AOS.init({ duration: 1000, once: true }); </script>
+<!-- maps -->
+<!-- <script>
+  function initLiveMap() {
+    if (!navigator.geolocation) {
+      alert("Geolocation not supported");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      const userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+
+      const map = new google.maps.Map(document.getElementById("liveMap"), {
+        zoom: 15,
+        center: userLocation,
+      });
+
+      new google.maps.Marker({
+        position: userLocation,
+        map: map,
+        title: "You are here!",
+      });
+
+    }, () => {
+      alert("Unable to fetch location");
+    });
+  }
+</script> -->
+
+<!-- LOAD GOOGLE MAP WITH YOUR KEY -->
+<script async 
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9vrKf0WeLxk3_sYHPEbxdUYTvBVG0CCU&callback=initLiveMap">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
+
+
+</body>
+</html>

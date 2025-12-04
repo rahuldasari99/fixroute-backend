@@ -1,0 +1,1557 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8">
+  
+  <title>FixRoute Auth</title>
+ 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+   <style>
+     /*================hero section============*/
+/* HERO
+    .hero{position:relative; height:78vh; min-height:560px; overflow:hidden; display:flex; align-items:center}
+    .hero-media{position:absolute; inset:0; z-index:1}
+    .hero-media img, .hero-media video{width:100%; height:100%; object-fit:cover; filter:grayscale(0.06) contrast(1.05) brightness(0.5)}
+    .hero-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6)); mix-blend-mode:multiply; z-index:2}
+    .hero-inner{position:relative; z-index:5; width:100%; display:flex; gap:28px; align-items:center}
+    .hero-left{flex:1; padding:48px}
+    .headline{font-size:clamp(2rem,6vw,4.2rem); line-height:0.9; font-weight:800; color:linear-gradient(90deg,#fff,#ffd); letter-spacing:-1px}
+    .headline .word{display:inline-block; transform-origin:center}
+    .sub{color:var(--muted); margin-top:14px; font-size:1.05rem}
+    .hero-actions{margin-top:22px; display:flex; gap:12px}
+    .btn-gold{background:linear-gradient(90deg,#caa936,#ffd97a); color:#111; padding:12px 18px; border-radius:10px; border:none; font-weight:700}
+    .btn-outline{padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:transparent}
+
+    /* 3D floating car card */
+    /* .hero-right{width:420px; max-width:42%; perspective:1400px}
+    .car-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:18px; padding:18px; border:1px solid rgba(255,255,255,0.04); transform-style:preserve-3d}
+    .car-img{width:100%; height:240px; border-radius:12px; overflow:hidden}
+    .car-img img{width:100%; height:100%; object-fit:cover}
+    .badge{display:inline-block; padding:6px 8px; border-radius:8px; background:rgba(202,169,54,0.12); color:var(--gold); font-weight:700; margin-right:8px} */
+
+    /* Sections */
+    /* section{padding:64px 0}
+    h2.section-title{font-size:1.05rem; margin:0 0 18px 0; color:var(--muted); text-transform:uppercase; letter-spacing:1px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.04)} */
+
+/* Responsive */
+/* @media (max-width: 980px) {
+  .hero-right {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .headline {
+    font-size: 2rem;
+  }
+} */
+
+
+/*=============hero section================= */
+/* -----------------------------------------------------
+   HERO SECTION
+----------------------------------------------------- */
+.hero {
+    position: relative;
+    height: 100vh;
+    min-height: 560px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+/* Background media (image/video) */
+.hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.hero-media img,
+.hero-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.06) contrast(1.05) brightness(0.5);
+}
+
+/* Overlay gradient */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
+    mix-blend-mode: multiply;
+    z-index: 2;
+}
+
+/* Inner content */
+.hero-inner {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+}
+
+.hero-left {
+    flex: 1;
+    padding: 48px;
+}
+
+/* Headline text */
+.headline {
+    font-size: clamp(2rem, 6vw, 4.2rem);
+    line-height: 0.9;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: linear-gradient(90deg, #fff, #ffd);
+}
+
+.headline .word {
+  
+    display: inline-block;
+    transform-origin: center;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;*/
+} 
+
+.sub {
+  
+    margin-top: 14px;
+    font-size: 1.05rem;
+    color: var(--muted);
+}
+
+/* Hero buttons */
+.hero-actions {
+    margin-top: 22px;
+    display: flex;
+    gap: 12px;
+}
+
+.btn-gold {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    color: #111;
+    background: linear-gradient(90deg, #caa936, #ffd97a);
+}
+
+.btn-outline {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: transparent;
+}
+
+/* -----------------------------------------------------
+   3D FLOATING CAR CARD
+----------------------------------------------------- */
+.hero-right {
+    width: 420px;
+    max-width: 42%;
+    perspective: 1400px;
+}
+
+.car-card {
+    padding: 18px;
+    border-radius: 18px;
+    transform-style: preserve-3d;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.car-img {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.car-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge {
+    display: inline-block;
+    padding: 10px 10px;
+    font-size: 14px;
+    margin-right: 8px;
+    border-radius: 8px;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(202,169,54,0.12);
+}
+
+/* -----------------------------------------------------
+   GENERAL SECTIONS & CARDS
+----------------------------------------------------- */
+section {
+    padding: 64px 0;
+}
+
+.section-title {
+    margin: 0 0 18px 0;
+    font-size: 1.05rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card {
+    padding: 18px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* -----------------------------------------------------
+   RESPONSIVE
+----------------------------------------------------- */
+@media (max-width: 980px) {
+    .hero-right {
+        display: none;
+    }
+}
+
+@media (max-width: 560px) {
+    .headline {
+        font-size: 2rem;
+    }
+}
+
+
+
+/*===========bottom popup===============*/
+.offer-popup {
+  position: fixed;
+  bottom: -150px; /* hidden initially */
+  left: 20px;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  padding: 12px 15px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  cursor: pointer;
+  width: 260px;
+  transition: 0.4s ease;
+  z-index: 99999;
+}
+
+.offer-popup.show {
+  bottom: 20px; /* visible */
+}
+
+.offer-popup img {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.offer-text h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+}
+
+.offer-text p {
+  margin: 3px 0 0;
+  font-size: 14px;
+  color: #444;
+}
+
+
+
+
+
+    /*google review section=============*/
+    .google-review-section {
+  background: #fff;
+  padding: 70px 0;
+  overflow: hidden;
+}
+
+.review-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #202124;
+  margin-bottom: 40px;
+  font-family: "Roboto", sans-serif;
+}
+
+.google-review-slider {
+  overflow: hidden;
+  width: 100%;
+}
+
+.google-review-track {
+  display: flex;
+  gap: 25px;
+  animation: scrollReviews 10s linear infinite;
+}
+
+.google-review-card {
+  min-width: 350px;
+  max-width: 350px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  font-family: "Roboto", sans-serif;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.review-img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+}
+
+.review-name {
+  font-size: 18px;
+  margin: 0;
+  color: #202124;
+  font-weight: 600;
+}
+
+.stars {
+  color: #fbbc04;
+  font-size: 18px;
+}
+
+.review-time {
+  font-size: 13px;
+  color: #5f6368;
+}
+
+.review-text {
+  margin-top: 15px;
+  color: #3c4043;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* scrolling animation */
+@keyframes scrollReviews {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* pause on hover */
+.google-review-slider:hover .google-review-track {
+  animation-play-state: paused;
+}
+
+
+
+
+/*================decription-===================*/
+.project-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 10%;
+  gap: 50px;
+  background: #ffffff;
+}
+
+.project-content {
+  flex: 1;
+}
+
+.project-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.project-typing {
+  font-size: 1.2rem;
+  color: #444;
+  min-height: 60px;
+  font-weight: 500;
+  margin-bottom: 25px;
+}
+
+.project-points {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.project-points li {
+  font-size: 1.1rem;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  color: #333;
+}
+
+.project-points li span {
+  color: orangered;
+  font-size: 1.4rem;
+  margin-right: 10px;
+}
+
+.project-btn {
+  display: inline-block;
+  background: orangered;
+  color: #fff;
+  padding: 12px 35px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.project-btn:hover {
+  background: #d93a00;
+  transform: scale(1.07);
+}
+
+.project-image img {
+  width: 100%;
+  border-radius: 10%;
+  max-width: 450px;
+  filter: drop-shadow(0px 8px 20px rgba(0, 0, 0, 0.3));
+  transition: transform 0.4s ease;
+}
+
+.project-image img:hover {
+  transform: rotate(2deg) scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .project-section {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+
+/*============car animtion=================*/
+
+/* Responsive */
+@media (max-width: 700px) {
+  .car-img { width: 150px; }
+}
+
+
+
+   </style>
+   
+
+
+</head>
+<body class="bg-black">
+
+
+  <!-- navigation bar start -->
+    <nav class="navbar navbar-expand-sm bg-black sticky-top py-1">
+      <div class="container navedit">
+        <a class="navbar-brand text-white" href="#"
+          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
+        >
+        <button
+          class="bi bi-list d-lg-none d-md-none"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        ></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 " >
+           <li class="nav-item px-4">
+              <a class="nav-link" href="index--1.html">HOME</a>
+            </li>
+            
+            <li class="nav-item px-4">
+              <a class="nav-link" href="index.html">OUR AI-PAGE</a>
+            </li>
+            <li class="nav-item px-4">
+                <a class="nav-link" href="about.html">ABOUT</a>
+            </li>
+            <li class="nav-item px-4">
+              <a class="nav-link" href="contact.html">CONTACT US</a>
+            </li>
+         
+          </ul>
+         
+        </div>
+        
+      </div>
+    </nav>
+
+  <!-- navigation bar end -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">LOGIN</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <section>
+   <label for="l_email">ENTER EMAIL</label>
+    <input id="l_email" placeholder="Email"><br>
+    <label for="l_password">ENTER PASSWORD</label>
+    <input id="l_password" type="password" placeholder="Password"><br>
+    <select id="l_role">
+      <option value="">(optional) Role</option>
+      <option value="user">User</option>
+      <option value="serviceman">Serviceman</option>
+      <option value="dealer">Dealer</option>
+      <option value="admin">Admin</option>
+    </select><br>
+    <!-- <button id="btnLogin">Login</button> -->
+
+  </section>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="btnLogin" class="btn btn-login">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+  <!-- modal section end -->
+
+
+   <!-- modal section signup start -->
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">SIGNUP</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- signup form start -->
+    <section class="modal-signupform">
+ 
+    
+    <label for="s_name">FULL NAME</label>
+    <input id="s_name" placeholder="Full name"><br>
+     <label for="s_phone">PHONE NUMBER</label>
+    <input id="s_phone" placeholder="Phone"><br>
+     <label for="s_email">EMAIL</label>
+    <input id="s_email" placeholder="Email"><br>
+    <label for="s_password">Password</label>
+    <input id="s_password" type="password" placeholder="Password"><br>
+    <select id="s_role">
+      <option value="user">User</option>
+      <option value="serviceman">Serviceman</option>
+      <option value="dealer">Dealer</option>
+      <option value="admin">Admin</option>
+    </select><br>
+    <!-- extra fields for serviceman/dealer -->
+    <div id="extraFields"></div>
+   
+  </section>
+  <!-- signup form end -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="btnSignup" class="btn btn-signup">Signup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- modal section end -->
+
+  <!--Hero section start-->
+  <section class="hero">
+      <div class="hero-media">
+        <!-- Use a high-quality car image from Unsplash -->
+        <img src="https://images.unsplash.com/photo-1621615578530-cbf3c443165f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3VwZXIlMjBjYXJ8ZW58MHx8MHx8fDA%3D&fm=jpg&q=60&w=3000" alt="Luxury car">
+        <!-- <img src="https://images.unsplash.com/photo-1511910849309-2b86a411b6d0?q=80&w=1800&auto=format&fit=crop&ixlib=rb-4.0.3&s=0f2c6bd3b2b1c2f9f9b6f6d1b9d9b5f7" alt="Luxury car"> -->
+      </div>
+      <div class="hero-overlay"></div>
+
+      <div class="container hero-inner">
+        <div class="hero-left">
+          <div class="headline" id="headline">The Future of Car <span class="word">Service Is Here!</span></div>
+          <div class="sub">We provide on-road repair, fuel delivery, and instant help whenever your car breaks down.</div>
+          <!-- <div class="hero-actions">
+            <button class="btn-gold" id="discoverBtn">Discover</button>
+            <button class="btn-outline" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">View Models</button>
+          </div> -->
+          <div style="margin-top:20px; display:flex; gap:12px; align-items:center">
+            <div class="badge">Just One Tap Away.</div>
+            <div style="color:var(--muted)">We Fix Everything On-Road</div>
+          </div>
+        </div>
+
+        <!-- <div class="hero-right">
+          <div class="car-card" id="carCard">
+            <div class="car-img">
+              <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=2d6f80a4b3e0f5e1a4f3f6a7b6b7c3d2" alt="Car product">
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px">
+              <div>
+                <div style="font-weight:800">Model Elegance V</div>
+                <div style="color:var(--muted); font-size:13px">Electric Gran Turismo — 520 km range</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-weight:800; color:var(--gold)">Limited</div>
+                <div style="color:var(--muted); font-size:12px">From $120k</div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+
+      <style>
+        /*================== hero section ====================*/
+/* HERO SECTION */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10%;
+    overflow: hidden;
+    color: #fff;
+}
+
+/* BACKGROUND VIDEO */
+.bg-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    transform: translate(-50%, -50%) scale(var(--zoom, 1));
+    transition: transform 0.2s linear;
+    z-index: -2;
+}
+
+/* OVERLAY FOR DARK EFFECT */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: -1;
+}
+
+/* LEFT TEXT */
+.hero-content {
+    max-width: 50%;
+    animation: fadeIn 1s ease;
+}
+
+.hero-content h1 {
+    font-size: 55px;
+    font-weight: 800;
+    min-height: 80px;
+    line-height: 1.2;
+    background: white;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.hero-content p {
+    margin-top: 15px;
+    font-size: 20px;
+    color: #eaeaea;
+}
+
+/* BUTTON */
+.hero-btn {
+    margin-top: 25px;
+    padding: 14px 26px;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    background: orangered;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0px 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.hero-btn:hover {
+    transform: scale(1.1);
+    background-color: white;
+    color: orangered;
+    box-shadow: 0px 10px 25px rgba(0,123,255,0.7);
+}
+
+/* RIGHT IMAGE (TILT EFFECT) */
+.hero-image img {
+    width: 400px;
+    transition: transform 0.15s ease-out;
+    filter: drop-shadow(0px 12px 30px rgba(0,0,0,0.5));
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 80px;
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    .hero-image img {
+        width: 300px;
+        margin-top: 30px;
+    }
+}
+
+      </style>
+
+    </section>
+
+
+    <script>
+          // GSAP: headline split and sequence
+    const headline = document.getElementById('headline');
+    const words = headline.innerText.split(' ');
+    headline.innerHTML = words.map(w => `<span class="word">${w}</span>`).join(' ');
+
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    // hero intro timeline
+    const tl = gsap.timeline();
+    tl.from('.word', { y: 40, opacity:0, stagger:0.12, duration:0.7, ease:'power3.out' })
+      .from('.sub', { y:18, opacity:0, duration:0.6 }, '-=0.4')
+      .from('.hero-right', { y:60, opacity:0, rotationY:-18, duration:1.2, ease:'power3.out' }, '-=0.6');
+
+    // discover button action to reveal card sequence
+    document.getElementById('discoverBtn').addEventListener('click', ()=>{
+      gsap.to(window, { duration:1, scrollTo: { y: '#products', offsetY:80 }, ease:'power2.inOut' });
+    });
+
+    // 3D card tilt on mouse move
+    const card = document.getElementById('carCard');
+    card.addEventListener('mousemove', (e)=>{
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left)/r.width; // 0..1
+      const py = (e.clientY - r.top)/r.height;
+      const rotY = (px - 0.5) * 18; const rotX = (py - 0.5) * -10;
+      gsap.to(card, {rotationY: rotY, rotationX: rotX, transformPerspective:1000, transformOrigin:'center', duration:0.4, ease:'power3.out'});
+    });
+    card.addEventListener('mouseleave', ()=>{ gsap.to(card, {rotationY:0, rotationX:0, duration:0.7, ease:'power3.out'}) });
+
+    // Reveal animations on scroll for sections
+    document.querySelectorAll('section').forEach((sec)=>{
+      gsap.from(sec, {opacity:0, y:40, duration:0.9, ease:'power3.out', scrollTrigger:{trigger:sec, start:'top 85%'}});
+    });
+    </script>
+  <!--Hero section end-->
+
+  <!-- Bottom Popup  start-->
+<!-- Bottom Left Popup -->
+<div id="offerPopup" class="offer-popup" onclick="openOfferPage()">
+  <img src="https://st.depositphotos.com/2036077/2629/i/450/depositphotos_26295427-stock-photo-3d-50-percent-sign.jpg" alt="Offer">
+  <div class="offer-text">
+    <h4>Special Offer</h4>
+    <p>Grab your exclusive discount →</p>
+  </div>
+</div>
+
+<script>
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        document.getElementById("offerPopup").classList.add("show");
+    }, 1500); // show after 1 second
+});
+
+function openOfferPage() {
+    window.location.href = "discount--2.html";
+}
+</script>
+
+
+<!--Bottom popup end-->
+
+  <!--decription starts-->
+  <section class="project-section">
+  <div class="project-content" data-aos="fade-right">
+    <!-- <h2 class="project-title">About Our Project</h2> -->           
+
+    <p class="project-typing" id="typingText"></p>
+
+    <ul class="project-points">
+      <li><span>✔</span> Real-time location tracking for emergency assistance.</li>
+      <li><span>✔</span> Connects users directly with nearby car service centers.</li>
+      <li><span>✔</span> Fast booking for repairs, towing, washing & maintenance.</li>
+      <li><span>✔</span> Best price comparison and exclusive offers.</li>
+      <li><span>✔</span> 24/7 support for roadside emergencies.</li>
+    </ul>
+
+    <a href="about.html" class="project-btn">Learn More</a>
+  </div>
+
+  <div class="project-image" data-aos="fade-left">
+    <img src="https://garesconcierge.com/wp-content/uploads/2024/12/auto-assist-1.jpg" alt="Project Image"/>
+  </div>
+</section>
+
+<script>
+  const text = "FixRoute is a smart vehicle rescue and car service platform designed to help users get fast, reliable, and affordable vehicle assistance anytime, anywhere.";
+
+  let index = 0;
+
+  function typeEffect() {
+    if (index < text.length) {
+      document.getElementById("typingText").innerHTML += text.charAt(index);
+      index++;
+      setTimeout(typeEffect, 40);
+    }
+  }
+
+  window.onload = typeEffect;
+</script>
+
+  <!--decription end-->
+
+
+  <!-- car---animation start-->
+   <!-- <section class="car-hero-section">
+  <div class="car-hero-content">
+    <h2 class="car-hero-title">About Our Project</h2>
+    <p class="car-hero-typing" id="carTyping"></p>
+  </div> -->
+
+  <!-- Car Animation -->
+  <!-- <div class="car-animation-container">
+    <img src="asserts/orange car.png" class="car-img" alt="Car" />
+    <div class="road"></div>
+  </div>
+</section> -->
+<!--car animation end -->
+
+
+<!--car brands start-->
+<!-- Brand Slider Section -->
+<section class="brand-slider">
+  <div class="slider-track">
+    <img class="brandcar" src="asserts/honda.png" alt="Brand 1" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/audi.png" alt="Brand 2" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/benz.png" alt="Brand 3" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/toyota.png" alt="Brand 4" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="https://images.seeklogo.com/logo-png/32/2/tesla-logo-png_seeklogo-329764.png" alt="Brand 5" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/jaguar.png" alt="Brand 6" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/hyundai.png" alt="Brand 7" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/ford-1.png" alt="Brand 8" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJMqL3T_ZarndGFUzy0QkshxMO-wb9emdQmg&s" alt="Brand 1" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/land rover.png" alt="Brand 2" style="width: 150px; height: 150px;" >
+    <!-- Duplicate for smooth infinite loop -->
+    <img class="brandcar" src="asserts/honda.png" alt="Brand 1" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/audi.png" alt="Brand 2" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/benz.png" alt="Brand 3" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/toyota.png" alt="Brand 4" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="https://images.seeklogo.com/logo-png/32/2/tesla-logo-png_seeklogo-329764.png" alt="Brand 5" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/jaguar.png" alt="Brand 6" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/hyundai.png" alt="Brand 7" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/ford-1.png" alt="Brand 8" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJMqL3T_ZarndGFUzy0QkshxMO-wb9emdQmg&s" alt="Brand 1" style="width: 150px; height: 150px;">
+    <img class="brandcar" src="asserts/land rover.png" alt="Brand 2" style="width: 150px; height: 150px;" >
+  </div>
+</section>
+
+<style>
+ 
+  .brand-slider {
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+    background: #f8f8f8;
+  }
+
+  .slider-track {
+    display: flex;
+    width: calc(200px * 16);
+    animation: scroll 20s linear infinite;
+  }
+
+  .slider-track img {
+    width: 200px;
+    margin: 0 20px;
+    filter: grayscale(0);
+    transition: 0.3s ease;
+    cursor: pointer;
+  }
+
+  .slider-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+</style>
+
+<!--car brands ends-->
+
+<!-- background sticky Section start-->
+  <section class="stats-section" style="padding:100px 5%; background:url('asserts/FB\ Fixar\ \(1\).png'); background-size:cover; background-attachment:fixed; text-align:center;">
+    <h2 style="font-size:3rem; margin-bottom:40px; letter-spacing:2px;  color: white; font-weight: bold;">Power • Performance • Precision</h2>
+    <div style="display:flex; justify-content:space-around; flex-wrap:wrap; gap:40px;  color: white;">
+      <div style="font-size:2.5rem; font-weight:700;">350+<p style="font-size:1rem; color:#ccc;">Cities Covered</p></div>
+      <div style="font-size:2.5rem; font-weight:700;">1M+<p style="font-size:1rem; color:#ccc;">Vehicles Connected</p></div>
+      <div style="font-size:2.5rem; font-weight:700;">99.9%<p style="font-size:1rem; color:#ccc;">System Accuracy</p></div>
+    </div>
+  </section>
+
+
+  <!--video section starts-->
+  <section class="split-section">
+  <div class="split-text">
+      <h2 class="title-anim">Your Car, Our Responsibility</h2>
+      <p class="desc-anim">
+        We provide the best car service with modern tools, certified mechanics, 
+        and on-time delivery. Experience quality, speed, and trust.
+      </p>
+      <!-- <button class="cta-btn">Explore Services</button> -->
+      <a href="index.html" class="project-btn">Explore Services</a>
+  </div>
+
+  <div class="split-video">
+      <video autoplay muted loop playsinline>
+          <source src="assets/fixRought (2).mp4" type="video/mp4">
+      </video>
+  </div>
+</section>
+<style>
+    /*=================video section=================*/
+.split-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 10%;
+  gap: 40px;
+  background: #01030a;
+}
+
+/* Left Text */
+.split-text {
+  flex: 1;
+  animation: slideLeft 1s ease;
+}
+
+.title-anim {
+  font-size: 40px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #007bff, #ff0080);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: glowText 3s infinite alternate;
+}
+
+.desc-anim {
+  font-size: 18px;
+  margin: 20px 0;
+  color: #555;
+  line-height: 1.6;
+  animation: fadeIn 1.5s ease;
+}
+
+/* CTA Button */
+.cta-btn {
+  padding: 12px 25px;
+  background: linear-gradient(135deg, orangered);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 17px;
+
+  transition: .3s;
+}
+
+.cta-btn:hover {
+  background: white;
+  color: orangered;
+
+}
+
+/* Right Video */
+.split-video {
+  flex: 1;
+  animation: slideRight 1s ease;
+}
+
+.split-video video {
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.25);
+}
+
+/* --- Animations --- */
+@keyframes slideLeft {
+  0% { opacity: 0; transform: translateX(-50px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideRight {
+  0% { opacity: 0; transform: translateX(50px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes glowText {
+  0% { text-shadow: 0px 0px 10px rgba(0,123,255,0.4); }
+  100% { text-shadow: 0px 0px 20px rgba(255,0,150,0.5); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .split-section {
+    flex-direction: column;
+    text-align: center;
+    padding: 50px 5%;
+  }
+
+  .split-text { animation: fadeIn 1s ease; }
+  .split-video { width: 100%; }
+}
+</style>
+
+  <!--video section Ends-->
+
+
+  <!--google review start-->
+
+
+  <section class="google-review-section">
+  <h2 class="review-title">What Our Users Say</h2>
+
+  <div class="google-review-slider" id="googleReviewSlider">
+    <div class="google-review-track">
+
+      <!-- Review Card -->
+       <div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=22" class="review-img">
+    <div>
+      <h4 class="review-name">Anjali Mehta</h4>
+      <div class="stars">★★★★★</div>
+      <span class="review-time">5 days ago</span>
+    </div>
+  </div>
+  <p class="review-text">Very smooth booking process. Customer support was excellent!</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=30" class="review-img">
+    <div>
+      <h4 class="review-name">Lokesh Yadav</h4>
+      <div class="stars">★★★★☆</div>
+      <span class="review-time">1 day ago</span>
+    </div>
+  </div>
+  <p class="review-text">Good offers and fast service. App UI is clean and easy to use.</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=44" class="review-img">
+    <div>
+      <h4 class="review-name">Manisha Rao</h4>
+      <div class="stars">★★★★★</div>
+      <span class="review-time">2 days ago</span>
+    </div>
+  </div>
+  <p class="review-text">Booked a car wash—very professional and on time!</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=15" class="review-img">
+    <div>
+      <h4 class="review-name">Vijay Krishna</h4>
+      <div class="stars">★★★★★</div>
+      <span class="review-time">3 days ago</span>
+    </div>
+  </div>
+  <p class="review-text">Nice app! Service centers are verified and trustworthy.</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=8" class="review-img">
+    <div>
+      <h4 class="review-name">Bhavani S</h4>
+      <div class="stars">★★★★★</div>
+      <span class="review-time">6 days ago</span>
+    </div>
+  </div>
+  <p class="review-text">Easy to book, great offers, and the service was excellent!</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=26" class="review-img">
+    <div>
+      <h4 class="review-name">Harish Kumar</h4>
+      <div class="stars">★★★★☆</div>
+      <span class="review-time">4 days ago</span>
+    </div>
+  </div>
+  <p class="review-text">Towing came in 20 mins. Fast and reliable. Good app.</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=35" class="review-img">
+    <div>
+      <h4 class="review-name">Sneha Das</h4>
+      <div class="stars">★★★★★</div>
+      <span class="review-time">1 week ago</span>
+    </div>
+  </div>
+  <p class="review-text">Highly recommended! I use it for regular servicing.</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=14" class="review-img">
+    <div>
+      <h4 class="review-name">Ashok Reddy</h4>
+      <div class="stars">★★★★★</div>
+      <span class="review-time">3 days ago</span>
+    </div>
+  </div>
+  <p class="review-text">Loved the fast booking feature. Very smooth experience.</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=9" class="review-img">
+    <div>
+      <h4 class="review-name">Keerthi Latha</h4>
+      <div class="stars">★★★★★</div>
+      <span class="review-time">2 days ago</span>
+    </div>
+  </div>
+  <p class="review-text">Service quality is top-notch! Better than other apps.</p>
+</div>
+
+<div class="google-review-card">
+  <div class="review-header">
+    <img src="https://i.pravatar.cc/80?img=48" class="review-img">
+    <div>
+      <h4 class="review-name">Nikhil Goel</h4>
+      <div class="stars">★★★★☆</div>
+      <span class="review-time">5 days ago</span>
+    </div>
+  </div>
+  <p class="review-text">Good app overall. Worth recommending to my friends.</p>
+</div>
+    </div>
+  </div>
+</section>
+
+
+<!--google review end-->
+
+
+<!--======================================chat-bot-ai start====================================================================-->
+    <style>
+/*================ Chat Container =================*/
+.chat-container {
+    width: 350px;
+    height: 500px;
+    background: black;
+    border-radius: 15px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;   /* ✅ Now it will stay bottom-right */
+    overflow: hidden;
+    z-index: 9999;
+}
+
+
+
+.header {
+    background: #000000;
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+    border-bottom: 1px solid #333;
+    color: white;
+}
+
+#messages {
+    height: 350px;
+    padding: 15px;
+    overflow-y: auto;
+    color: white;
+}
+
+.user-msg, .bot-msg {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.user-msg {
+    background: orange;
+    margin-left: auto;
+}
+
+.bot-msg {
+    background: orangered;
+    margin-right: auto;
+}
+
+.input-area {
+    display: flex;
+    height: 70px;
+    padding: 10px;
+    background: #1e1e1e;
+    border-top: 1px solid #333;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+.input-area button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    background: orangered;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+    </style>
+    <!-- ================= CHAT WRAPPER ================= -->
+<div id="chatWrapper" style="display:none;">
+    <div class="chat-container">
+
+        <!-- Background bot -->
+        <!-- <iframe
+            src="https://my.spline.design/nexbotrobotcharacterconcept-EcRmIIsM7vItqrJ3Wx6ykPjW/"
+            frameborder="0"
+            allow="fullscreen"
+            style="
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                border:0;
+                opacity:0.35;
+                pointer-events:none;
+                z-index:0;
+            ">
+        </iframe> -->
+
+        <!-- Header + Close Button -->
+        <div class="header" style="position:relative; z-index:10; font-weight: bold;">
+            ASK <span style="color: orangered; font-size: 35px;" >ME...?</span>
+
+            <button id="closeChatBtn" style="
+                position:absolute;
+                top:10px;
+                right:10px;
+                background:transparent;
+                color:rgb(255, 255, 255);
+                border:none;
+                font-size:22px;
+                cursor:pointer;
+            ">✖</button>
+        </div>
+
+        <div id="messages" style="position:relative; z-index:10;"></div>
+
+        <div class="input-area" style="position:relative; z-index:10;">
+            <input id="userInput" type="text" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<!-- ================= FLOATING ROBOT BUTTON ================= -->
+<div id="robotBox" style="
+    position: fixed;
+    bottom: -56px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    /* border: 2px solid red; */
+    overflow: hidden;
+    z-index: 9999; ">
+
+    <iframe 
+      src="https://my.spline.design/genkubgreetingrobot-23ytRLSuyyrwaASdfVBodbGD/"
+      frameborder="0"
+      style="width:100%; height:100%; border:0;">
+    </iframe>
+
+    <button id="chatBotOverlay" style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    "></button>
+</div>
+
+
+
+
+<!-- ================= AI BOT LOGIC ================= -->
+<script>
+
+// OPEN CHAT → hide robot
+function openChat() {
+    document.getElementById("chatWrapper").style.display = "block";
+    document.getElementById("robotBox").style.display = "none";
+}
+
+// CLOSE CHAT → show robot
+function closeChat() {
+    document.getElementById("chatWrapper").style.display = "none";
+    document.getElementById("robotBox").style.display = "block";
+}
+
+// Attach button events
+document.getElementById("chatBotOverlay").addEventListener("click", openChat);
+document.getElementById("closeChatBtn").addEventListener("click", closeChat);
+
+
+
+
+// ====== AI CHAT SYSTEM ======
+const responses = [
+    { keywords: ["hi","hello","hey"], reply:"Hello! Welcome to On-Road Automotive Rescue. How can I assist you today?" },
+    { keywords: ["good morning","good afternoon","good evening"], reply:"Greetings! How may I support you?" },
+
+    { keywords: ["what is this","about project","what do you do"], reply:"This system helps users get instant roadside assistance such as puncture fix, fuel delivery, engine help & more." },
+
+    { keywords: ["how to book","book service"], reply:"Login → Select issue → Allow GPS → Submit request. Nearest mechanic will be assigned instantly." },
+
+    { keywords: ["puncture","tyre","tire"], reply:"Select 'Tyre Rescue' and we’ll send a technician to your location." },
+    { keywords: ["petrol","fuel","out of fuel"], reply:"Select 'Fuel Support' to get immediate petrol delivery." },
+    { keywords: ["battery","no start"], reply:"Choose 'Battery Jumpstart' to get fast help." },
+    { keywords: ["engine","breakdown"], reply:"Select 'Engine Support'. A nearby expert will reach you ASAP." },
+
+    { keywords: ["track","mechanic"], reply:"You can track your mechanic live from your dashboard." },
+
+    { keywords: ["payment","pay"], reply:"We support UPI, cards, wallets & online payments." },
+
+    { keywords: ["location","gps"], reply:"We auto-detect your GPS location to assign the nearest mechanic." },
+
+    { keywords: ["subscription","premium"], reply:"Premium 24x7 rescue subscription plans coming soon!" },
+
+    { keywords: ["future","ai"], reply:"We’re developing an AI system that will detect vehicle issues automatically." },
+
+    { keywords: ["name","who are you"], reply:"I am the On-Road Rescue AI Assistant." },
+
+    { keywords: ["bye"], reply:"Goodbye! Drive safe!" },
+    { keywords: ["thanks","thank you"], reply:"Happy to help! 🚗⚙️" }
+];
+
+const fallbackReplies = [
+    "I'm not sure I understand, can you explain more?",
+    "Interesting! Tell me more.",
+    "I didn’t get that, but I'm here to help."
+];
+
+function getBotReply(message) {
+    message = message.toLowerCase();
+    for (let r of responses) {
+        for (let key of r.keywords) {
+            if (message.includes(key)) return r.reply;
+        }
+    }
+    return fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
+}
+
+function sendMessage() {
+    let input = document.getElementById("userInput");
+    let text = input.value.trim();
+    if (text === "") return;
+
+    let messages = document.getElementById("messages");
+    messages.innerHTML += `<div class='user-msg'>${text}</div>`;
+
+    let reply = getBotReply(text);
+
+    setTimeout(() => {
+        messages.innerHTML += `<div class='bot-msg'>${reply}</div>`;
+        messages.scrollTop = messages.scrollHeight;
+    }, 300);
+
+    input.value = "";
+}
+
+</script>
+
+<!--==================chat bot-ai- end==============================================================-->
+
+
+
+
+
+
+  <!-- footer start -->
+<footer class="footer p-4 border-top footer-txt bg-black">
+      <div class="container">
+        <!-- footer-navigation start -->
+        <div class="row">
+          <!-- col-1 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <!-- brand-information -->
+             <a class="navbar-brand text-white" href="#"
+          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
+        >
+
+            <!-- brand-title -->
+            <p class="text-lead text-capitalize mb-2">
+              FixRoute Analytics helps you understand real-time service demand, track technician performance, and identify high-request zones. With data-driven insights, your team can respond faster, allocate technicians better, and deliver a smoother on-road assistance experience.
+            </p>
+            <!-- social media icons -->
+            <div class="footer-social-icons my-3">
+              <i class="fs-4 p-2 border rounded bi bi-whatsapp"></i>
+              <i class="fs-4 p-2 border rounded bi bi-facebook"></i>
+              <i class="fs-4 p-2 border rounded bi bi-instagram"></i>
+              <i class="fs-4 p-2 border rounded bi bi-linkedin"></i>
+            </div>
+          </div>
+          <!-- col-2 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Quick Links</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">Home</li>
+              <li class="p-1">Services</li>
+            
+              <li class="p-1">Analytics</li>
+              <li class="p-1">Contact</li>
+            </ul>
+          </div>
+          <!-- col-3 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Services</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">Insights & Reports</li>
+              <li class="p-1">Recommendations</li>
+              <li class="p-1">usage dashboard</li>
+              <li class="p-1">Visualizations</li>
+            </ul>
+          </div>
+          <!-- col-4 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Get to know us</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">About Fixroute</li>
+              <li class="p-1">Terms&Conditions</li>
+              <li class="p-1">Privacy Policy</li>
+
+              <li class="p-1">Careers</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-top  border-2" />
+        <!-- footer-navigation end -->
+        <div class="text-center">
+          <p class="fs-6 fw-bold">
+            Copyright &copy; 2025 fixroute. All Right Reserved
+          </p>
+        </div>
+      </div>
+    </footer>
+
+
+  <!-- footer end -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+  <script src="auth.js"></script>
+</body>
+</html>
