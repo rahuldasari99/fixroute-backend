@@ -1127,10 +1127,11 @@ async function attachBillUIForBooking(booking, wrapper) {
         <div class="text-end">
           <div class="small text-muted">Status</div>
           <div class="fw-bold ${status === 'paid' ? 'text-success' : 'text-warning'}">${escapeHtml(status)}</div>
-        </div>
-         <button class="btn btn-outline-secondary btn-sm" onclick="downloadBill('${billId}')">
+           <button class="btn btn-outline-secondary btn-sm" onclick="downloadBill('${billId}')">
           Download
         </button>
+        </div>
+        
       </div>
 
       <table class="table table-sm mb-2">
@@ -1243,6 +1244,30 @@ async function payBill(billId) {
   rzp.open();
 }
 
+function downloadBill(billId) {
+  // Get the bill HTML block that is already rendered
+  const billDiv = document.getElementById(`bill-ui-${billId}`);
+
+  if (!billDiv) {
+    alert("Bill information is not loaded yet.");
+    return;
+  }
+
+  // Extract text content (you can also use innerHTML for richer formatting)
+  const billContent = billDiv.innerText;
+
+  // Convert the content into a downloadable text file
+  const blob = new Blob([billContent], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  // Create a download link dynamically
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Bill_${billId}.txt`; // You can change this to .html also
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
 
 
     </script> 
