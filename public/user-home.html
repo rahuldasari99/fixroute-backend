@@ -1127,9 +1127,7 @@ async function attachBillUIForBooking(booking, wrapper) {
         <div class="text-end">
           <div class="small text-muted">Status</div>
           <div class="fw-bold ${status === 'paid' ? 'text-success' : 'text-warning'}">${escapeHtml(status)}</div>
-           <button class="btn btn-outline-secondary btn-sm" onclick="downloadBill('${billId}')">
-          Download
-        </button>
+           
         </div>
         
       </div>
