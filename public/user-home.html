@@ -1078,6 +1078,95 @@ async function attachBillUIForBooking(booking, wrapper) {
     const token = localStorage.getItem('token');
     if (!token) return;
 
+    // 🔥 FIX: Remove old invoice UI before rendering new one
+    wrapper.querySelectorAll(".invoice-card").forEach(el => el.remove());
+
+    const res = await fetch('/api/bills?booking_id=' + encodeURIComponent(booking.id), {
+      headers: { Authorization: "Bearer " + token }
+    });
+
+    if (!res.ok) return;
+
+    const j = await res.json();
+    const bills = j.bills || j.data || [];
+    if (!bills.length) return;
+
+    const bill = bills[0];
+    const aiPrice = Number(bill.ai_price ?? 0);
+    const sparePrice = Number(bill.spare_part_price ?? 0);
+    const totalAmount = Number(bill.amount ?? (aiPrice + sparePrice));
+    const displayAmount = totalAmount.toFixed(2);
+
+    const status = (bill.status || bill.payment_status || "pending").toLowerCase();
+    const billId = bill.id;
+    const description = bill.description || "";
+    const servicemanName = (bill.serviceman_name || bill.serviceman?.full_name || "");
+
+    function formatINR(v) {
+      return Number(v).toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    // 🔥 FIX: Add invoice-card class so we can remove/refresh it easily
+    const billHtml = document.createElement("div");
+    billHtml.className = "invoice-card mt-3 p-3 border rounded bg-white";
+
+    billHtml.innerHTML = `
+      <div class="d-flex justify-content-between mb-2">
+        <div>
+          <h5 class="mb-1">Invoice</h5>
+          <div class="small text-muted">Booking: ${booking.id}</div>
+          ${servicemanName ? `<div class="small text-muted">Serviceman: ${servicemanName}</div>` : ""}
+        </div>
+        <div class="text-end">
+          <div class="small text-muted">Status</div>
+          <div class="fw-bold ${status === 'paid' ? 'text-success' : 'text-warning'}">
+            ${status}
+          </div>
+        </div>
+      </div>
+
+      <table class="table table-sm mb-2">
+        <tbody>
+          <tr><td><strong>AI Price</strong></td><td class="text-end">₹${formatINR(aiPrice)}</td></tr>
+          <tr><td><strong>Spare Part Price</strong></td><td class="text-end">₹${formatINR(sparePrice)}</td></tr>
+          <tr><td><strong>Other Fees</strong></td><td class="text-end">₹${formatINR(bill.other_fees ?? 0)}</td></tr>
+          <tr><td><strong>Total</strong></td><td class="text-end fw-bold">₹${formatINR(totalAmount)}</td></tr>
+        </tbody>
+      </table>
+
+      ${description ? `<div class="mb-2"><strong>Notes:</strong> ${description}</div>` : ""}
+
+      <div id="bill-ui-${billId}" class="mt-1"></div>
+    `;
+
+    wrapper.appendChild(billHtml);
+
+    const act = document.getElementById("bill-ui-" + billId);
+
+    if (status === "paid") {
+      act.innerHTML = `<span class="text-success">Paid ✔</span>`;
+      return;
+    }
+
+    act.innerHTML = `
+      <button class="btn btn-success btn-sm"
+              onclick="payBill('${billId}', '${totalAmount}')">
+        Pay Bill — ₹${formatINR(totalAmount)}
+      </button>
+    `;
+
+  } catch (err) {
+    console.error("Bill UI error:", err);
+  }
+}
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
     const res = await fetch('/api/bills?booking_id=' + encodeURIComponent(booking.id), {
       headers: { Authorization: "Bearer " + token }
     });
