@@ -1252,64 +1252,85 @@ async function downloadBill(billId) {
       return;
     }
 
-    // Fetch bill details from API
+    // Fetch the specific bill by ID
     const res = await fetch(`/api/bills?id=${billId}`, {
       headers: { Authorization: "Bearer " + token }
     });
 
     if (!res.ok) {
-      alert("Unable to fetch bill for download.");
+      alert("Unable to fetch the bill for download.");
       return;
     }
 
-    const bill = await res.json();
+    const data = await res.json();
+    const bill = data.bill || data || null;
 
-    // Build Invoice Text
+    if (!bill) {
+      alert("Bill not found.");
+      return;
+    }
+
+    // Extract bill values safely
+    const aiPrice = Number(bill.ai_price ?? 0);
+    const sparePrice = Number(bill.spare_part_price ?? 0);
+    const otherFees = Number(bill.other_fees ?? 0);
+    const extraCharges = Number(bill.extra_charges ?? 0);
+    const basePrice = Number(bill.base_price ?? 0);
+    const total = Number(bill.total_price ?? bill.amount ?? 0);
+    const description = bill.description || "";
+    const status = bill.status || "pending";
+    const servicemanName =
+      bill.serviceman_name ||
+      (bill.serviceman ? bill.serviceman.full_name : "Not Available");
+
+    // Build invoice text file content
     const invoiceText = `
 *************** FIXROUTE INVOICE ***************
 
-Bill ID: ${bill.id}
-Booking ID: ${bill.booking_id}
-Serviceman ID: ${bill.serviceman_id}
-User ID: ${bill.user_id}
+Bill ID       : ${bill.id}
+Booking ID    : ${bill.booking_id}
+Serviceman    : ${servicemanName}
+User ID       : ${bill.user_id}
+
+-------------------- CHARGES --------------------
+
+Base Price         : ₹${basePrice}
+Extra Charges      : ₹${extraCharges}
+Spare Part Price   : ₹${sparePrice}
+AI Price           : ₹${aiPrice}
+Other Fees         : ₹${otherFees}
 
 -----------------------------------------------
-Base Price: ₹${bill.base_price ?? 0}
-Extra Charges: ₹${bill.extra_charges ?? 0}
-Spare Part Price: ₹${bill.spare_part_price ?? 0}
-AI Price: ₹${bill.ai_price ?? 0}
------------------------------------------------
-Total Invoice Amount: ₹${bill.total_price ?? bill.amount ?? 0}
+TOTAL AMOUNT       : ₹${total}
 -----------------------------------------------
 
-Status: ${bill.status}
+Status       : ${status}
+Created At   : ${bill.created_at}
 
-Created At: ${bill.created_at}
+Notes:
+${description || "None"}
 
 ************************************************
 Powered by FixRoute
 ************************************************
 `;
 
-    // Convert to file (text)
+    // Create a file and download
     const blob = new Blob([invoiceText], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
 
-    // Create download link
     const a = document.createElement("a");
     a.href = url;
     a.download = `FixRoute_Invoice_${billId}.txt`;
     a.click();
 
-    // Cleanup
     URL.revokeObjectURL(url);
 
   } catch (err) {
-    console.error("Download error:", err);
-    alert("Something went wrong while downloading the bill.");
+    console.error("Download Bill Error:", err);
+    alert("Something went wrong while downloading the invoice.");
   }
 }
-
 
     </script> 
 
