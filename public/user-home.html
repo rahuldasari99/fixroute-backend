@@ -742,44 +742,34 @@
 
           alert('Booking Successful! ID: ' + json.booking.id);
 
-         // hide modal cleanly and reset modal DOM
-const modalEl = document.getElementById('serviceModal');
-const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-modalInstance.hide();
+          // hide modal cleanly and reset modal DOM (fixes dark overlay issue)
+          const modalEl = document.getElementById('serviceModal');
+          const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modalInstance.hide();
 
-setTimeout(() => {
-  // restore step 1 UI
-  document.getElementById('step1').style.display = 'block';
-  document.getElementById('step2').style.display = 'none';
-  document.getElementById('btnSelectTech').style.display = 'block';
-  document.querySelector('#serviceModal .modal-title').innerText = 'Book Service';
+          // reset modal content AFTER hide transition completes (short delay to ensure removal)
+          setTimeout(() => {
+            // restore step1 UI
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('btnSelectTech').style.display = 'block';
+            document.querySelector('#serviceModal .modal-title').innerText = 'Book Service';
 
-  // clear tech list
-  document.getElementById('techList').innerHTML = '';
+            // clear tech list
+            document.getElementById('techList').innerHTML = '';
 
-  // destroy map
-  if (currentMap) {
-    try { currentMap.remove(); } catch(e) {}
-    currentMap = null;
-    currentMarker = null;
-  }
+            // destroy map to free memory
+            if (currentMap) {
+              try { currentMap.remove(); } catch(e) {}
+              currentMap = null;
+              currentMarker = null;
+            }
 
-  // remove backdrops
-  document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-  document.body.classList.remove('modal-open');
-  document.body.style.overflow = 'auto';
-
-  // ⭐ AFTER CLEANUP → OPEN BOOKINGS MODAL
-  const bookingsModalEl = document.getElementById("bookingsModal");
-  const bookingsModal = new bootstrap.Modal(bookingsModalEl);
-  bookingsModal.show();
-
-  // ⭐ Load bookings into modal
-  if (typeof loadBookings === "function") {
-    loadBookings();
-  }
-
-}, 300);
+            // remove backdrop nodes and modal-open class if any
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = 'auto';
+          }, 300);
 
         } catch (err) {
           console.error('book-service err', err);
