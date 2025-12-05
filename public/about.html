@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About | Vehicle Rescue</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    *{
+    font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+    }
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      /* background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); */
+      background-color: rgba(201, 201, 201, 0.46);
+      color: #fff;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    .nav-link{
+  color: white;
+}
+.nav-item :hover{
+  color: orangered;
+}
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: #ffcc00;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      transition: color 0.3s;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #ffcc00;
+    }
+
+    /* HERO SECTION WITH VIDEO */
+    .hero {
+      position: relative;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .hero video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.45);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 0;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      color: orangered;
+      font-weight: bold;
+      position: relative;
+      z-index: 2;
+      animation: fadeInDown 1.5s ease;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      position: relative;
+      color: white;
+      z-index: 2;
+      animation: fadeInUp 1.5s ease;
+      width: 70%;
+      max-width: 700px;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    section {
+      padding: 70px 10%;
+    }
+
+    h2 {
+      color: orangered;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    p {
+      color: rgb(91, 90, 90);
+      text-align: center;
+    }
+
+    .mission-vision {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .mission-card {
+      background: rgba(255, 255, 255, 0.08);
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.551);
+
+      padding: 25px;
+      border-radius: 12px;
+      width: 320px;
+      text-align: center;
+      transition: transform 0.4s;
+    }
+
+    .mission-card:hover {
+      transform: translateY(-10px);
+      background: rgba(233, 16, 16, 0.15);
+    }
+
+    .mission-card img {
+      width: 80px;
+      margin-bottom: 15px;
+      border-radius: 50%;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 40px;
+    }
+
+    .gallery img {
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.551);
+
+      width: 100%;
+      border-radius: 12px;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.07);
+    }
+
+    .achievements {
+        background: linear-gradient(90deg,rgba(0, 0, 0, 0.884) 0%, rgba(184, 57, 11, 1) 70%, rgba(255, 69, 0, 1) 100%);
+
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.551);
+
+      padding: 50px 10%;
+      border-radius: 15px;
+      margin-top: 60px;
+      text-align: center;
+    }
+
+    .achievements h3 {
+      color: white;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .achievements p {
+      color: #bbb;
+    }
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .team {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .team {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+    .team-card {
+      background: rgba(255, 255, 255, 0.08);
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.551);
+
+      border-radius: 15px;
+      padding: 20px;
+      transition: 0.3s;
+    }
+    .team h3{
+      color: black;
+    }
+
+    .team-card:hover {
+      transform: scale(1.05);
+      background: rgba(233, 16, 16, 0.15);
+    }
+
+    .team-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+    /* .team-card:hover {
+      
+      transform: translateY(-10px);
+      background: rgba(233, 16, 16, 0.15);
+    } */
+
+    /* .tech-stack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+} */
+
+/* .tech-card {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.551);
+
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  transition: transform 0.4s, background 0.4s;
+}
+
+.tech-card:hover {
+  
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.tech-card img {
+  width: 80px;
+  margin-bottom: 15px;
+}
+
+.tech-card h3 {
+  color: black;
+  margin-bottom: 10px;
+} */
+
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    /* Scroll fade animation */
+    .scroll-fade {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1s ease;
+    }
+
+    .scroll-fade.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- navigation bar start -->
+    <nav class="navbar navbar-expand-sm bg-black sticky-top py-1">
+      <div class="container navedit">
+        <a class="navbar-brand text-white" href="#"
+          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
+        >
+        <button
+          class="bi bi-list d-lg-none d-md-none"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+           
+            <li class="nav-item">
+              <a class="nav-link" href="index--1.html">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">OUR AI-PAGE</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">ABOUT</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">CONTACT US</a>
+            </li>
+         
+          </ul>
+         
+        </div>
+        
+      </div>
+    </nav>
+
+  <!-- navigation bar end -->
+
+  <!-- HERO SECTION WITH VIDEO -->
+  <div class="hero">
+    <video autoplay muted loop playsinline>
+      <source src="asserts/Car Mechanic Female Repairing.mp4" type="video/mp4">
+    </video>
+    <h1>About Vehicle Rescue Service</h1>
+    <p>Your trusted roadside partner — fast, reliable, and available 24/7.</p>
+  </div>
+
+  <section data-aos="fade-up" class="scroll-fade">
+    <h2>Our Story</h2>
+    <p>When your vehicle faces trouble — whether it’s a fuel shortage or a sudden breakdown — our website helps you instantly book nearby mechanics. With real-time location tracking, we connect you to the closest service provider for quick and reliable roadside assistance.</p>
+
+    <div class="gallery" data-aos="zoom-in">
+        <img src="asserts/sad-woman-has-broken-down-600nw-2476386655.webp">
+        <img src="https://thumbs.dreamstime.com/b/man-refuelling-car-roadside-his-highway-53700090.jpg" style="height: 195px;">
+      <img src="https://autoaid.in/wp-content/uploads/2023/12/Image-2-1.jpg">
+      <img src="https://www.mach1services.com/wp-content/uploads/2020/09/tow-truck-work.jpg">
+    </div>
+  </section>
+
+  <section class="scroll-fade">
+    <h2 data-aos="fade-up">Our Mission & Vision</h2>
+    <div class="mission-vision">
+      <div class="mission-card" data-aos="fade-right">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Mission">
+        <h3>Mission</h3>
+        <p>To make roadside assistance easy, fast, and reliable using smart technology and verified professionals.</p>
+      </div>
+
+      <div class="mission-card" data-aos="fade-left">
+        <img src="https://cdn-icons-png.flaticon.com/512/906/906175.png" alt="Vision">
+        <h3>Vision</h3>
+        <p>To build India’s most trusted vehicle support platform with real-time help, tracking, and safety assurance.</p>
+      </div>
+
+      <div class="mission-card" data-aos="fade-up">
+        <img src="https://cdn-icons-png.flaticon.com/512/1086/1086741.png" alt="Goal">
+        <h3>Goal</h3>
+        <p>To expand our services to every city and ensure no driver feels stranded again.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="achievements scroll-fade">
+    <h2>Our Achievements</h2>
+    <div>
+      <h3>⭐ 10K+ Happy Users</h3>
+      <p>We have successfully helped thousands of stranded drivers across India.</p>
+      <h3>⚙️ 2K+ Verified Mechanics</h3>
+      <p>We partner with trusted local professionals, ensuring top-quality service.</p>
+      <h3>📍 Real-time Location Support</h3>
+      <p>With our advanced GPS detection, we deliver the nearest mechanic instantly.</p>
+    </div>
+  </section>
+
+  <section data-aos="fade-up" class="scroll-fade">
+    <h2>Meet Our Team</h2>
+    <div class="team" >
+      <div class="team-card" data-aos="fade-left">
+        <img src="asserts/icons8-test-account.gif" alt="">
+        <h3>Rahul</h3>
+        <p>Team Lead</p>
+      </div>
+      <div class="team-card" data-aos="fade-right">
+        <img src="asserts/icons8-life-cycle.gif" alt="">
+        <h3>Dinesh Reddy</h3>
+        <p>Frontend Developer </p>
+      </div>
+      <div class="team-card" data-aos="fade-up">
+        <img src="asserts/icons8-profile.gif" alt="">
+        
+        <h3>Vandana</h3>
+        <p>UI/UX Designer</p>
+      </div>
+      <div class="team-card" data-aos="fade-left">
+        <img src="asserts/icons8-user-update.gif" alt="">
+        <h3>Bhavya</h3>
+        <p>Data Analyst</p>
+      </div>
+      <div class="team-card" data-aos="fade-left">
+        <img src="asserts/icons8-profile (1).gif" alt="">
+        <h3>Ateeb</h3>
+        <p>Data Analyst</p>
+      </div>
+      <div class="team-card" data-aos="fade-left">
+        <img src="asserts/icons8-name.gif" alt="">
+        <h3>Prasad</h3>
+        <p>Data Analyst</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNOLOGY STACK SECTION
+<section class="scroll-fade" data-aos="fade-up">
+  <h2>Our Technology Stack</h2>
+  <p>We use modern, efficient, and scalable technologies to deliver a fast and seamless experience for our users.</p>
+
+  <div class="tech-stack">
+    <div class="tech-card" data-aos="zoom-in">
+      <img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" alt="HTML5">
+      <h3>HTML5</h3>
+      <p>For creating structured, accessible, and SEO-friendly web pages.</p>
+    </div>
+
+    <div class="tech-card" data-aos="zoom-in" data-aos-delay="100">
+      <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" alt="CSS3">
+      <h3>CSS3</h3>
+      <p>Used to design a modern, responsive, and visually appealing layout.</p>
+    </div>
+
+    <div class="tech-card" data-aos="zoom-in" data-aos-delay="200">
+      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968292.png" alt="JavaScript">
+      <h3>JavaScript</h3>
+      <p>Handles dynamic interactions, animations, and real-time updates.</p>
+    </div>
+
+    <div class="tech-card" data-aos="zoom-in" data-aos-delay="300">
+      <img src="https://cdn-icons-png.flaticon.com/512/873/873120.png" alt="Google Maps API">
+      <h3>Google Maps API</h3>
+      <p>Integrates location detection, route mapping, and live tracking features.</p>
+    </div>
+  </div>
+</section> -->
+
+
+
+<!--======================================chat-bot-ai start====================================================================-->
+    <style>
+/*================ Chat Container =================*/
+.chat-container {
+    width: 350px;
+    height: 500px;
+    background: black;
+    border-radius: 15px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;   /* ✅ Now it will stay bottom-right */
+    overflow: hidden;
+    z-index: 9999;
+}
+
+
+
+.header {
+    background: #000000;
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+    border-bottom: 1px solid #333;
+    color: white;
+}
+
+#messages {
+    height: 350px;
+    padding: 15px;
+    overflow-y: auto;
+    color: white;
+}
+
+.user-msg, .bot-msg {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.user-msg {
+    background: orange;
+    margin-left: auto;
+}
+
+.bot-msg {
+    background: orangered;
+    margin-right: auto;
+}
+
+.input-area {
+    display: flex;
+    height: 60px;
+    padding: 10px;
+    background: #1e1e1e;
+    border-top: 1px solid #333;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+.input-area button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    background: orangered;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+    </style>
+    <!-- ================= CHAT WRAPPER ================= -->
+<div id="chatWrapper" style="display:none;">
+    <div class="chat-container">
+
+        <!-- Background bot -->
+        <!-- <iframe
+            src="https://my.spline.design/nexbotrobotcharacterconcept-EcRmIIsM7vItqrJ3Wx6ykPjW/"
+            frameborder="0"
+            allow="fullscreen"
+            style="
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                border:0;
+                opacity:0.35;
+                pointer-events:none;
+                z-index:0;
+            ">
+        </iframe> -->
+
+        <!-- Header + Close Button -->
+        <div class="header" style="position:relative; z-index:10; font-weight: bold;">
+            ASK <span style="color: orangered; font-size: 35px;" >ME...?</span>
+
+            <button id="closeChatBtn" style="
+                position:absolute;
+                top:10px;
+                right:10px;
+                background:transparent;
+                color:rgb(255, 255, 255);
+                border:none;
+                font-size:22px;
+                cursor:pointer;
+            ">✖</button>
+        </div>
+
+        <div id="messages" style="position:relative; z-index:10;"></div>
+
+        <div class="input-area" style="position:relative; z-index:10;">
+            <input id="userInput" type="text" placeholder="Type a message...">
+            <button class="btn btn-book" onclick="sendMessage()" >Send</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<!-- ================= FLOATING ROBOT BUTTON ================= -->
+<div id="robotBox" style="
+    position: fixed;
+    bottom: -56px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    /* border: 2px solid red; */
+    overflow: hidden;
+    z-index: 9999; ">
+
+    <iframe 
+      src="https://my.spline.design/genkubgreetingrobot-23ytRLSuyyrwaASdfVBodbGD/"
+      frameborder="0"
+      style="width:100%; height:100%; border:0;">
+    </iframe>
+
+    <button id="chatBotOverlay" style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    "></button>
+</div>
+
+
+
+
+<!-- ================= AI BOT LOGIC ================= -->
+<script>
+
+// OPEN CHAT → hide robot
+function openChat() {
+    document.getElementById("chatWrapper").style.display = "block";
+    document.getElementById("robotBox").style.display = "none";
+}
+
+// CLOSE CHAT → show robot
+function closeChat() {
+    document.getElementById("chatWrapper").style.display = "none";
+    document.getElementById("robotBox").style.display = "block";
+}
+
+// Attach button events
+document.getElementById("chatBotOverlay").addEventListener("click", openChat);
+document.getElementById("closeChatBtn").addEventListener("click", closeChat);
+
+
+
+
+// ====== AI CHAT SYSTEM ======
+const responses = [
+    { keywords: ["hi","hello","hey"], reply:"Hello! Welcome to On-Road Automotive Rescue. How can I assist you today?" },
+    { keywords: ["good morning","good afternoon","good evening"], reply:"Greetings! How may I support you?" },
+
+    { keywords: ["what is this","about project","what do you do"], reply:"This system helps users get instant roadside assistance such as puncture fix, fuel delivery, engine help & more." },
+
+    { keywords: ["how to book","book service"], reply:"Login → Select issue → Allow GPS → Submit request. Nearest mechanic will be assigned instantly." },
+
+    { keywords: ["puncture","tyre","tire"], reply:"Select 'Tyre Rescue' and we’ll send a technician to your location." },
+    { keywords: ["petrol","fuel","out of fuel"], reply:"Select 'Fuel Support' to get immediate petrol delivery." },
+    { keywords: ["battery","no start"], reply:"Choose 'Battery Jumpstart' to get fast help." },
+    { keywords: ["engine","breakdown"], reply:"Select 'Engine Support'. A nearby expert will reach you ASAP." },
+
+    { keywords: ["track","mechanic"], reply:"You can track your mechanic live from your dashboard." },
+
+    { keywords: ["payment","pay"], reply:"We support UPI, cards, wallets & online payments." },
+
+    { keywords: ["location","gps"], reply:"We auto-detect your GPS location to assign the nearest mechanic." },
+
+    { keywords: ["subscription","premium"], reply:"Premium 24x7 rescue subscription plans coming soon!" },
+
+    { keywords: ["future","ai"], reply:"We’re developing an AI system that will detect vehicle issues automatically." },
+
+    { keywords: ["name","who are you"], reply:"I am the On-Road Rescue AI Assistant." },
+
+    { keywords: ["bye"], reply:"Goodbye! Drive safe!" },
+    { keywords: ["thanks","thank you"], reply:"Happy to help! 🚗⚙️" }
+];
+
+const fallbackReplies = [
+    "I'm not sure I understand, can you explain more?",
+    "Interesting! Tell me more.",
+    "I didn’t get that, but I'm here to help."
+];
+
+function getBotReply(message) {
+    message = message.toLowerCase();
+    for (let r of responses) {
+        for (let key of r.keywords) {
+            if (message.includes(key)) return r.reply;
+        }
+    }
+    return fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
+}
+
+function sendMessage() {
+    let input = document.getElementById("userInput");
+    let text = input.value.trim();
+    if (text === "") return;
+
+    let messages = document.getElementById("messages");
+    messages.innerHTML += `<div class='user-msg'>${text}</div>`;
+
+    let reply = getBotReply(text);
+
+    setTimeout(() => {
+        messages.innerHTML += `<div class='bot-msg'>${reply}</div>`;
+        messages.scrollTop = messages.scrollHeight;
+    }, 300);
+
+    input.value = "";
+}
+
+</script>
+
+<!--========================ai chat-bot- End=============================================-->
+
+
+ 
+<!--===========footer start===========-->
+
+  <!-- footer start -->
+<footer class="footer p-4 border-top footer-txt bg-black">
+      <div class="container">
+        <!-- footer-navigation start -->
+        <div class="row">
+          <!-- col-1 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <!-- brand-information -->
+             <a class="navbar-brand text-white" href="#"
+          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
+        >
+
+            <!-- brand-title -->
+            <p class="text-lead text-capitalize mb-2">
+              FixRoute Analytics helps you understand real-time service demand, track technician performance, and identify high-request zones. With data-driven insights, your team can respond faster, allocate technicians better, and deliver a smoother on-road assistance experience.
+            </p>
+            <!-- social media icons -->
+            <div class="footer-social-icons my-3">
+              <i class="fs-4 p-2 border rounded bi bi-whatsapp"></i>
+              <i class="fs-4 p-2 border rounded bi bi-facebook"></i>
+              <i class="fs-4 p-2 border rounded bi bi-instagram"></i>
+              <i class="fs-4 p-2 border rounded bi bi-linkedin"></i>
+            </div>
+          </div>
+          <!-- col-2 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Quick Links</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">Home</li>
+              <li class="p-1">Services</li>
+            
+              <li class="p-1">Analytics</li>
+              <li class="p-1">Contact</li>
+            </ul>
+          </div>
+          <!-- col-3 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Services</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">Insights & Reports</li>
+              <li class="p-1">Recommendations</li>
+              <li class="p-1">usage dashboard</li>
+              <li class="p-1">Visualizations</li>
+            </ul>
+          </div>
+          <!-- col-4 -->
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <h4 class="fw-bold">Get to know us</h4>
+            <ul class="list-unstyled">
+              <li class="p-1">About Fixroute</li>
+              <li class="p-1">Terms&Conditions</li>
+              <li class="p-1">Privacy Policy</li>
+
+              <li class="p-1">Careers</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-top  border-2" />
+        <!-- footer-navigation end -->
+        <div class="text-center">
+          <p class="fs-6 fw-bold">
+            Copyright &copy; 2025 fixroute. All Right Reserved
+          </p>
+        </div>
+      </div>
+    </footer>
+
+
+  <!-- footer end -->
+<!--============footer end================-->
+
+  <!-- AOS Script -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000, once: true });
+
+    // Scroll fade animation
+    const scrollElements = document.querySelectorAll(".scroll-fade");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, { threshold: 0.2 });
+
+    scrollElements.forEach(el => observer.observe(el));
+  </script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</body>
+</html>
