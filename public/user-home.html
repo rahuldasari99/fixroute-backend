@@ -837,6 +837,19 @@ setTimeout(() => {
         await loadBookings(); // loads user bookings and initializes maps
         modal.show();
       });
+      let billPoller = null;
+
+// When Bookings Modal opens → start polling
+document.getElementById('bookingsModal').addEventListener('shown.bs.modal', () => {
+  billPoller = setInterval(refreshBillsLive, 2000); // every 2 seconds
+});
+
+// When modal closes → stop polling
+document.getElementById('bookingsModal').addEventListener('hidden.bs.modal', () => {
+  if (billPoller) clearInterval(billPoller);
+  billPoller = null;
+});
+
 
       // fetch user bookings
       async function loadBookings() {
@@ -1183,6 +1196,22 @@ async function attachBillUIForBooking(booking, wrapper) {
     console.error("Bill UI error:", err);
   }
 }
+// 🔄 LIVE BILL REFRESHER
+async function refreshBillsLive() {
+  const bookingCards = document.querySelectorAll(".booking-card");
+
+  for (const card of bookingCards) {
+    const mapEl = card.querySelector("[id^='booking-map-']");
+    if (!mapEl) continue;
+
+    const bookingId = mapEl.id.replace("booking-map-", "");
+    if (!bookingId) continue;
+
+    // Re-render ONLY the bill for this booking
+    attachBillUIForBooking({ id: bookingId }, card);
+  }
+}
+
 
 
 /* --- Payment Function --- */
