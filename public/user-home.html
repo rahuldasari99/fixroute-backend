@@ -900,6 +900,7 @@ setTimeout(() => {
               const el = document.getElementById('booking-map-' + id);
               if (el) el.innerHTML = '<p class="text-muted small">Map failed to initialize.</p>';
             });
+            attachBillUIForBooking(booking, wrapper)
             attachBillUIForBooking(b, wrapper);
           
           }
@@ -1169,7 +1170,7 @@ async function attachBillUIForBooking(booking, wrapper) {
     // preserve existing payBill signature (billId, amt)
     act.innerHTML = `
       <div class="d-flex gap-2">
-        <button class="btn btn-success btn-sm" onclick="payBill('${billId}', '${totalAmount}')">
+        <button class="btn btn-book btn-sm" onclick="payBill('${billId}', '${totalAmount}')">
           Pay Bill — ₹${formatINR(totalAmount)}
         </button>
         <button class="btn btn-outline-secondary btn-sm" onclick="downloadBill('${billId}')">
