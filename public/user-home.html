@@ -773,6 +773,7 @@
       if (bookingsModalEl) {
         const bookingsModal = new bootstrap.Modal(bookingsModalEl);
         // loadBookings(); // will populate bookingList and init booking maps (up to MAX_BOOKING_MAPS)
+        loadBookings()
         bookingsModal.show();
       }
     }, 300);
