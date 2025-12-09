@@ -1566,28 +1566,68 @@ app.post("/api/verify-payment", async (req, res) => {
 /* =============================
    USER FETCHES BILL (Supports ?booking_id= )
 ============================= */
+// app.get("/api/bills", async (req, res) => {
+//   try {
+//     const user = await validateToken(req);
+//     if (!user) return res.json({ success: false, error: "Invalid token" });
+
+//     const { booking_id } = req.query;
+//     if (!booking_id)
+//       return res.json({ success: false, error: "booking_id required" });
+
+//     const { data: bills, error } = await supabase
+//       .from("bills")
+//       .select("*")
+//       .eq("booking_id", booking_id);
+
+//     if (error) throw error;  // Makes debugging easier
+
+//     res.json({ success: true, bills });
+//   } catch (err) {
+//     console.error("ERROR /api/bills:", err);
+//     res.status(500).json({ success: false, error: "Internal Server Error" });
+//   }
+// });
+
 app.get("/api/bills", async (req, res) => {
   try {
     const user = await validateToken(req);
     if (!user) return res.json({ success: false, error: "Invalid token" });
 
-    const { booking_id } = req.query;
-    if (!booking_id)
-      return res.json({ success: false, error: "booking_id required" });
+    const { booking_id, id } = req.query;
 
-    const { data: bills, error } = await supabase
-      .from("bills")
-      .select("*")
-      .eq("booking_id", booking_id);
+    // ✔ CASE 1: Single bill by ID
+    if (id) {
+      const { data: bill, error } = await supabase
+        .from("bills")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-    if (error) throw error;  // Makes debugging easier
+      if (error) throw error;
 
-    res.json({ success: true, bills });
+      return res.json({ success: true, bill });
+    }
+
+    // ✔ CASE 2: All bills by booking_id
+    if (booking_id) {
+      const { data: bills, error } = await supabase
+        .from("bills")
+        .select("*")
+        .eq("booking_id", booking_id);
+
+      if (error) throw error;
+
+      return res.json({ success: true, bills });
+    }
+
+    return res.json({ success: false, error: "id or booking_id required" });
   } catch (err) {
     console.error("ERROR /api/bills:", err);
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 });
+
 
 //admin
 app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
