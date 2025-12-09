@@ -157,6 +157,33 @@ input:focus {
 .carousel-caption {
   top: 20px;
   bottom: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+/* Extra Small Devices (Phones, 0px – 575px) */
+@media (max-width: 575px) {
+  /* Your mobile styles */
+  .custom-carousel .carousel-inner {
+  height: 200px; /* adjust height as you want */
+  border-radius: 20px; /* rounded corners */
+  overflow: hidden; /* important for rounded corners */
+}
+
+  
+}
+
+/* Small Devices (Large Phones, 576px – 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  /* Bigger mobile styles */
+  .custom-carousel .carousel-inner {
+  height: 200px; /* adjust height as you want */
+  border-radius: 20px; /* rounded corners */
+  overflow: hidden; /* important for rounded corners */
+}
+
 }
 #map {
   width: 100%;
@@ -270,3 +297,14 @@ input:focus {
     color: #888;
   }
 
+.modalheader{
+  background-color: black;
+  color: white;
+}
+.btncl{
+  background-color: white;
+}
+.billui{
+ 
+width: 100%;
+}
