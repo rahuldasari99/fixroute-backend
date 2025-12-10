@@ -263,9 +263,9 @@
     <div class="modal fade" id="serviceModal" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header modalheader">
             <h5 class="modal-title">Book Service</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close btncl" data-bs-dismiss="modal"></button>
           </div>
 
           <div class="modal-body">
@@ -1239,7 +1239,7 @@ async function attachBillUIForBooking(booking, wrapper) {
 
     if (status === "paid") {
       act.innerHTML = `<span class='text-success'>Paid</span>
-       <button class="btn btn-outline-secondary btn-sm mx-3" onclick="downloadBill('${billId}')">
+       <button class="btn btn-book btn-sm mx-3" onclick="downloadBill('${billId}')">
           Download
         </button>`;
       return;
