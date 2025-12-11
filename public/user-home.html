@@ -907,11 +907,19 @@ document.getElementById("techList").addEventListener("click", async (e) => {
     const modalEl = document.getElementById("serviceModal");
     const modalInstance = bootstrap.Modal.getInstance(modalEl);
     modalInstance.hide();
-
+    const bookingsModalEl = document.getElementById("bookingsModal");
+let bookingsModal = bootstrap.Modal.getInstance(bookingsModalEl);
+if (!bookingsModal) {
+  bookingsModal = new bootstrap.Modal(bookingsModalEl);
+}
+loadBookings()
+bookingsModal.show();
   } catch (err) {
     console.error("book-service error", err);
     alert("Error booking service.");
   }
+
+ 
 });
 
       /* -----------------------------
