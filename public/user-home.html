@@ -305,6 +305,7 @@
 
             <div id="step2" style="display:none;">
               <h4 class="mb-3 text-center">Servicemen Near You</h4>
+              <div id="techMap" style="height:250px; border-radius:12px; margin-bottom:15px;"></div>
               <div id="techList" class="mx-4"></div>
             </div>
           </div>
@@ -700,166 +701,218 @@
          STEP 2 — CALL BACKEND AND SHOW TECHNICIANS
          (requires that user saved or selected location)
       ------------------------------ */
-      document.getElementById('btnSelectTech').addEventListener('click', async () => {
-        // Ensure location selected & saved to SELECTED_LAT/LNG
-        if (SELECTED_LAT == null || SELECTED_LNG == null) {
-          return alert('Please detect or pick a location and press Save This Location before proceeding.');
-        }
+      let techMap = null;
+let techMarkers = [];
+let userMarker = null;
 
-        const service = document.getElementById('serviceName').value;
-        const token = localStorage.getItem('token');
-        const container = document.getElementById('techList');
-        container.innerHTML = '<div class="text-center p-3">Loading technicians...</div>';
-
-        try {
-          const resp = await fetch('/api/recommend-servicemen', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({
-              service_type: service,
-              lat: SELECTED_LAT,
-              lng: SELECTED_LNG
-            })
-          });
-
-          const json = await resp.json();
-          const results = json.results || [];
-          container.innerHTML = '';
-
-          if (results.length === 0) {
-            container.innerHTML = '<p class="text-muted">No technicians nearby.</p>';
-            return;
-          }
-
-          results.forEach(t => {
-            container.innerHTML += `
-              <div class="border rounded p-3 my-2 shadow-sm servicemen-info d-flex justify-content-between align-items-center">
-                <div class="tech-info">
-                  <h5>${escapeHtml(t.full_name)} (⭐ ${escapeHtml(String(t.rating || 0))})</h5>
-                  <p>Distance: ${Number(t.distance_km || 0).toFixed(2)} km</p>
-                  <p>ETA: ${Math.round(t.eta_predicted || 0)} mins</p>
-                  <p>Base Cost: ₹${escapeHtml(String(t.base_cost || 0))}</p>
-
-                  <button class="btn btn-book select-tech"
-                          data-id="${t.id}"
-                          data-eta="${t.eta_predicted}"
-                          data-name="${escapeHtml(t.full_name)}">
-                    Select
-                  </button>
-                </div>
-                <div class="tech-img text-end">
-                  <img src="assets/mechanic.png" style="width:80px; height:80px;">
-                </div>
-              </div>
-            `;
-          });
-
-          // switch modal view
-          document.getElementById('step1').style.display = 'none';
-          document.getElementById('step2').style.display = 'block';
-          document.getElementById('btnSelectTech').style.display = 'none';
-          document.querySelector('#serviceModal .modal-title').innerText = 'Select Technician';
-
-        } catch (err) {
-          console.error('recommend servicemen err', err);
-          container.innerHTML = '<p class="text-danger">Error loading technicians.</p>';
-        }
-      });
-
-      /* -----------------------------
-         SELECT A TECHNICIAN → BOOK SERVICE (existing endpoint)
-      ------------------------------ */
-      document.getElementById('techList').addEventListener('click', async (e) => {
-        const btn = e.target.closest('.select-tech');
-        if (!btn) return;
-
-        const serviceman_id = btn.dataset.id;
-        const eta = Number(btn.dataset.eta) || 0;
-        const name = btn.dataset.name || 'Technician';
-
-        if (!confirm(`Confirm booking with ${name}?`)) return;
-
-        // ensure we have saved coordinates from earlier Save action (Option A)
-        if (SELECTED_LAT == null || SELECTED_LNG == null) {
-          return alert('Location missing — pick and Save the location first.');
-        }
-
-        const service = document.getElementById('serviceName').value;
-        const token = localStorage.getItem('token');
-
-        try {
-          const resp = await fetch('/api/book-service', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({
-              serviceman_id,
-              service_type: service,
-              lat: SELECTED_LAT,
-              lng: SELECTED_LNG,
-              eta_predicted: eta
-            })
-          });
-
-          const json = await resp.json();
-          if (!json.success) {
-            console.error('booking failed response', json);
-            alert('Booking failed: ' + (json.error ? JSON.stringify(json.error) : 'Unknown'));
-            return;
-          }
-
-          alert('Booking Successful! ID: ' + json.booking.id);
-
-          // hide modal cleanly and reset modal DOM
-const modalEl = document.getElementById('serviceModal');
-const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-modalInstance.hide();
-
-setTimeout(() => {
-  // restore step 1 UI
-  document.getElementById('step1').style.display = 'block';
-  document.getElementById('step2').style.display = 'none';
-  document.getElementById('btnSelectTech').style.display = 'block';
-  document.querySelector('#serviceModal .modal-title').innerText = 'Book Service';
-
-  // clear tech list
-  document.getElementById('techList').innerHTML = '';
-
-  // destroy map
-  if (currentMap) {
-    try { currentMap.remove(); } catch(e) {}
-    currentMap = null;
-    currentMarker = null;
+/* -----------------------------
+   Create Technician Map
+------------------------------ */
+function initTechMap(lat, lng) {
+  if (techMap) {
+    try { techMap.remove(); } catch (e) {}
+    techMap = null;
   }
 
-  // remove backdrops
-  document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-  document.body.classList.remove('modal-open');
-  document.body.style.overflow = 'auto';
+  techMap = new mapboxgl.Map({
+    container: "techMap",
+    style: "mapbox://styles/mapbox/streets-v11",
+    center: [lng, lat],
+    zoom: 12
+  });
 
-  // ⭐ AFTER CLEANUP → OPEN BOOKINGS MODAL
-  const bookingsModalEl = document.getElementById("bookingsModal");
-  const bookingsModal = new bootstrap.Modal(bookingsModalEl);
-  bookingsModal.show();
+  techMap.on("load", () => {
+    // User marker (blue)
+    userMarker = new mapboxgl.Marker({ color: "blue" })
+      .setLngLat([lng, lat])
+      .setPopup(new mapboxgl.Popup().setHTML("<b>Your Location</b>"))
+      .addTo(techMap);
+  });
+}
 
-  // ⭐ Load bookings into modal
-  if (typeof loadBookings === "function") {
-    loadBookings();
+/* -----------------------------
+   LOAD TECHNICIANS AFTER STEP 1
+------------------------------ */
+document.getElementById("btnSelectTech").addEventListener("click", async () => {
+  if (SELECTED_LAT == null || SELECTED_LNG == null) {
+    return alert("Please detect or pick a location and press Save.");
   }
 
+  const service = document.getElementById("serviceName").value;
+  const token = localStorage.getItem("token");
+  const container = document.getElementById("techList");
+  container.innerHTML = '<div class="text-center p-3">Loading technicians...</div>';
+
+  try {
+    const resp = await fetch("/api/recommend-servicemen", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({
+        service_type: service,
+        lat: SELECTED_LAT,
+        lng: SELECTED_LNG
+      })
+    });
+
+    const json = await resp.json();
+    const results = json.results || [];
+    container.innerHTML = "";
+
+    /* -----------------------------
+       Show NO technicians
+    ------------------------------ */
+    if (results.length === 0) {
+      container.innerHTML = `<p class="text-muted">No technicians found near you.</p>`;
+      return;
+    }
+
+    /* -----------------------------
+       Initialize Map
+    ------------------------------ */
+    initTechMap(SELECTED_LAT, SELECTED_LNG);
+
+    /* -----------------------------
+       CLEAR OLD MARKERS
+    ------------------------------ */
+    techMarkers.forEach(m => m.remove());
+    techMarkers = [];
+
+    const bounds = new mapboxgl.LngLatBounds();
+    bounds.extend([SELECTED_LNG, SELECTED_LAT]); // user location
+
+    /* -----------------------------
+       Build Technician Cards + Map Markers
+    ------------------------------ */
+    results.forEach(t => {
+console.log("Technician:", t);
+
+      // Add card
+      container.innerHTML += `
+        <div class="border rounded p-3 my-2 shadow-sm servicemen-info d-flex justify-content-between align-items-center">
+          <div class="tech-info">
+            <h5>${escapeHtml(t.full_name)} (⭐ ${escapeHtml(String(t.rating || 0))})</h5>
+            <p>Distance: ${Number(t.distance_km || 0).toFixed(2)} km</p>
+            <p>ETA: ${Math.round(t.eta_predicted || 0)} mins</p>
+            <p>Base Cost: ₹${escapeHtml(String(t.base_cost || 0))}</p>
+
+            <button class="btn btn-book select-tech"
+                    data-id="${t.id}"
+                    data-eta="${t.eta_predicted}"
+                    data-name="${escapeHtml(t.full_name)}">
+              Select
+            </button>
+          </div>
+          <div class="tech-img text-end">
+            <img src="assets/mechanic.png" style="width:80px; height:80px;">
+          </div>
+        </div>
+      `;
+
+      // Map markers
+      // Technician Map Marker (Correct DB Fields)
+const techLat = t.location_lat;
+const techLng = t.location_lng;
+
+if (techLat && techLng) {
+  const el = document.createElement("img");
+  el.src = "assets/automobile-with-wrench.png";   // your wrench icon
+  el.className = "wrench-marker";
+
+  const marker = new mapboxgl.Marker(el)
+    .setLngLat([techLng, techLat])
+    .setPopup(
+      new mapboxgl.Popup().setHTML(`
+        <b>${t.full_name}</b><br>
+        ⭐ ${t.rating || 0}<br>
+         basecost: <b>${t.base_cost}</b><br>
+
+        ETA: ${Math.round(t.eta_predicted)} mins
+      `)
+    )
+    .addTo(techMap);
+
+  techMarkers.push(marker);
+  bounds.extend([techLng, techLat]);
+}
+
+    });
+
+    /* -----------------------------
+       Auto Zoom to fit all markers
+    ------------------------------ */
+    techMap.fitBounds(bounds, { padding: 40 });
+
+    /* -----------------------------
+       Switch UI from Step 1 → Step 2
+    ------------------------------ */
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
+    document.getElementById("btnSelectTech").style.display = "none";
+    document.querySelector("#serviceModal .modal-title").innerText = "Select Technician";
+    setTimeout(() => {
+    if (techMap) techMap.resize();
 }, 300);
 
 
-        } catch (err) {
-          console.error('book-service err', err);
-          alert('Error booking service.');
-        }
-      });
+  } catch (err) {
+    console.error("recommend servicemen err", err);
+    container.innerHTML = '<p class="text-danger">Error loading technicians.</p>';
+  }
+});
+
+/* -----------------------------
+   SELECT TECHNICIAN → BOOK
+------------------------------ */
+document.getElementById("techList").addEventListener("click", async (e) => {
+  const btn = e.target.closest(".select-tech");
+  if (!btn) return;
+
+  const serviceman_id = btn.dataset.id;
+  const eta = Number(btn.dataset.eta) || 0;
+  const name = btn.dataset.name;
+
+  if (!confirm(`Confirm booking with ${name}?`)) return;
+
+  if (SELECTED_LAT == null || SELECTED_LNG == null) {
+    return alert("Location missing — please Save Location.");
+  }
+
+  const token = localStorage.getItem("token");
+  const service = document.getElementById("serviceName").value;
+
+  try {
+    const resp = await fetch("/api/book-service", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({
+        serviceman_id,
+        service_type: service,
+        lat: SELECTED_LAT,
+        lng: SELECTED_LNG,
+        eta_predicted: eta
+      })
+    });
+
+    const json = await resp.json();
+    if (!json.success) return alert("Booking failed: " + json.error);
+
+    alert("Booking Successful! ID: " + json.booking.id);
+
+    const modalEl = document.getElementById("serviceModal");
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    modalInstance.hide();
+
+  } catch (err) {
+    console.error("book-service error", err);
+    alert("Error booking service.");
+  }
+});
 
       /* -----------------------------
          Reset modal DOM when hidden (user closes manually)
