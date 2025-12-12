@@ -122,9 +122,9 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content shadow-lg">
       
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title">AI Billing Summary</h5>
-        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      <div class="modal-header bg-dark text-white modalheader">
+        <h5 class="modal-title">Billing Summary</h5>
+        <button class="btn-close btn-close-white btncl" data-bs-dismiss="modal"></button>
       </div>
 
       <div class="modal-body">
@@ -135,10 +135,12 @@
         <div class="p-3 bg-light rounded mb-3">
           <h6 class="fw-bold text-primary mb-2">AI Calculated Charges</h6>
 
-          <p class="mb-1"><strong>Distance:</strong> <span id="aiDistance">--</span></p>
+          
           <p class="mb-1"><strong>ETA:</strong> <span id="aiETA">--</span></p>
-          <p class="mb-1"><strong>Surge:</strong> ₹<span id="aiSurge">--</span></p>
-          <p class="mb-1"><strong>Base Charge:</strong> ₹<span id="aiBase">--</span></p>
+          <p class="mb-1"><strong>Distance:</strong> <span id="aiDistance">--</span></p>
+           <p class="mb-1"><strong>Base Charge:</strong> ₹<span id="aiBase">--</span></p>
+          <p class="mb-1"><strong>Handling Charge:</strong> ₹<span id="aiSurge">--</span></p>
+         
 
           <h4 class="mt-3 text-success">
             Final Price: ₹<span id="aiFinalPrice">--</span>
