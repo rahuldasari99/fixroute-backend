@@ -874,10 +874,11 @@ document.getElementById("techList").addEventListener("click", async (e) => {
   const eta = Number(btn.dataset.eta) || 0;
   const name = btn.dataset.name;
 
-  if (!confirm(`Confirm booking with ${name}?`)) return;
+  // if (!confirm(`Confirm booking with ${name}?`)) return;
 
   if (SELECTED_LAT == null || SELECTED_LNG == null) {
-    return alert("Location missing — please Save Location.");
+    showMessage("Location missing — please Save Location.", "danger");
+    return;
   }
 
   const token = localStorage.getItem("token");
@@ -900,27 +901,45 @@ document.getElementById("techList").addEventListener("click", async (e) => {
     });
 
     const json = await resp.json();
-    if (!json.success) return alert("Booking failed: " + json.error);
+    if (!json.success) {
+      showMessage("Booking failed: " + json.error, "danger");
+      return;
+    }
 
-    alert("Booking Successful! ID: " + json.booking.id);
+    // Success message in HTML
+    showMessage(`Booking Successful with ${name}!`, "success");
 
+
+    // Close service modal
     const modalEl = document.getElementById("serviceModal");
     const modalInstance = bootstrap.Modal.getInstance(modalEl);
     modalInstance.hide();
+
+    // Open bookings modal
     const bookingsModalEl = document.getElementById("bookingsModal");
-let bookingsModal = bootstrap.Modal.getInstance(bookingsModalEl);
-if (!bookingsModal) {
-  bookingsModal = new bootstrap.Modal(bookingsModalEl);
-}
-loadBookings()
-bookingsModal.show();
+    let bookingsModal = bootstrap.Modal.getInstance(bookingsModalEl);
+    if (!bookingsModal) bookingsModal = new bootstrap.Modal(bookingsModalEl);
+
+    loadBookings();
+    bookingsModal.show();
+
   } catch (err) {
     console.error("book-service error", err);
-    alert("Error booking service.");
+    showMessage("Error booking service.", "danger");
   }
-
- 
 });
+function showMessage(text, type = "success") {
+  const msg = document.getElementById("bookingMessage");
+  if (!msg) return;
+
+  msg.className = "alert alert-" + type;
+  msg.innerHTML = text;   // <-- allows badges and HTML
+  msg.classList.remove("d-none");
+
+  setTimeout(() => {
+    msg.classList.add("d-none");
+  }, 3000);
+}
 
       /* -----------------------------
          Reset modal DOM when hidden (user closes manually)
@@ -1466,6 +1485,13 @@ Powered by FixRoute
     alert("Something went wrong while downloading the invoice.");
   }
 }
+document.getElementById('serviceModal').addEventListener('shown.bs.modal', function () {
+    setTimeout(() => {
+        if (currentMap) currentMap.resize();
+        if (techMap) techMap.resize();
+    }, 300);
+});
+
 
     </script> 
 

@@ -1,167 +1,334 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <title>FixRoute Auth</title>
- 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FixRoute Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
-   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
 
-
+  <style>
+   
+    .sidebar { width:260px; position:fixed; top:0; bottom:0; left:0; padding:20px; background:#000000; border-right:1px solid #000000; overflow-y:auto; }
+    .sidebar .nav-link { color:#9ca3af; margin:6px 0; padding:10px; border-radius:6px; }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover { background:#1f2937; color:orangered; }
+    .content-area { margin-left:270px; padding:20px; }
+    .card-box { background:#1f2937; border-radius:10px; padding:15px; }
+    .tableBox { background:#1f2937; padding:10px; border-radius:10px;margin-top: 2rem; }
+  </style>
 </head>
-
 <body>
    <nav class="navbar navbar-expand-sm bg-black sticky-top py-1">
       <div class="container navedit">
-        <a class="navbar-brand text-white" href="#"
-          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
-        >
-        <button
-          class="bi bi-list d-lg-none d-md-none"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        ></button>
+        <a class="navbar-brand text-white" href="#"><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a>
+        <button class="bi bi-list d-lg-none d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"></button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-           
-            <li class="nav-item">
-              <a class="nav-link"  data-bs-toggle="modal" data-bs-target="#staticBackdrop1" onclick="loadUsers()"
-                >USERS</a>
-              
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" onclick="loadServicemen()" >SERVICEMEN</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" onclick="loadBills()" >BILLS</a>
-            </li>
             
-            <li class="nav-item">
-              <a class="nav-link" onclick="loadBookings()" >BOOKINGS</a>
+
+            <!-- BOOKINGS will be handled by JS to load contents -->
+             <li class="nav-item">
+             
+      <input 
+        id="searchInput"
+        class="form-control"
+        placeholder="Search for Users,Service..."
+        onkeyup="applySearch()"
+        style="max-width:300px;"
+      />
+   
             </li>
 
-              <li class="nav-item">
-              <a class="nav-link" id="logout" >LOGOUT</a>
-            </li>
-         
+             
           </ul>
-         
         </div>
-        
       </div>
     </nav>
 
-
-
-<!-- <button class="btn btn-success mb-3" onclick="loadServicemen()">All Servicemen</button>
-<button class="btn btn-warning mb-3" onclick="loadBills()">All Bills</button>
-<button class="btn btn-danger mb-3" onclick="loadBookings()">All Bookings</button> -->
-<div class="container">
-  <div id="carouselExample" class="carousel slide custom-carousel">
+  <div class="sidebar">
+    <h4 class="text-light">Admin Dashboard</h4>
+    <hr class="border-secondary">
+    <a class="nav-link" data-sec="dashboard">Dashboard</a>
+    <a class="nav-link" data-sec="users">Users</a>
+    <a class="nav-link" data-sec="technicians">Technicians</a>
+    <a class="nav-link" data-sec="bookings">Bookings</a>
+    <a class="nav-link" data-sec="bills">Bills</a>
+    <a class="nav-link" data-sec="analytics">Analytics</a>
+    <a class="nav-link" data-sec="heatmap">Heatmap</a>
+    <a class="nav-link" data-sec="performance">Performance</a>
+    <a class="nav-link" data-sec="alerts">Failed Alerts</a>
+    <hr class="border-secondary">
+    <button id="logout" class="btn btn-book w-100">LOGOUT</button>
+  </div>
+  
+  <div class="content-area">
+    <div class="container my-1">
+      <div id="carouselExample" class="carousel slide custom-carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img src="assets/ChatGPT Image Nov 18, 2025 at 12_27_41 PM.png" class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-              <p class="display-3 fw-bold">hey Admin!</p>
-              <p class="fs-4">Quick help anytime, Anywhere</p>
+            <div class="carousel-caption ">
+              <p class="display-3 fw-bold"> <h2 id="pageTitle" class="display-1 fw-bold">Dashboard</h2></p>
+             
             </div>
           </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
+       
       </div>
+    </div>
+    
+   
+    
+    <div id="content"></div>
+  </div>
 
-  <div id="adminProfileInfo"></div>
-  <div id="content">
-    <script>
- loadUsers()
-    </script>
+<script>
+const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
+if (!token || role !== "admin") window.location = "index.html";
+
+async function api(url, method="GET", body=null) {
+  const res = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+    body: body ? JSON.stringify(body) : null
+  });
+  const txt = await res.text();
+  try { return JSON.parse(txt); } catch { return { success:false, error:"Invalid JSON" }; }
+}
+
+function setActive(el) {
+  document.querySelectorAll('.nav-link').forEach(x => x.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById("pageTitle").innerText = el.innerText;
+}
+
+async function loadDashboard() {
+  const d = await api('/api/admin/dashboard');
+  document.getElementById('content').innerHTML = `
+    <div class="row g-3 text-white my-1">
+      <div class="col-md-3"><div class="card-box">Total Bookings: <h3>${d.total_bookings}</h3></div></div>
+      <div class="col-md-3"><div class="card-box">Active Techs: <h3>${d.active_techs}</h3></div></div>
+      <div class="col-md-3"><div class="card-box">Completed Jobs: <h3>${d.completed_jobs}</h3></div></div>
+      <div class="col-md-3"><div class="card-box text-danger">Failed: <h3>${d.failed_bookings}</h3></div></div>
+    </div>
+    <hr>
+    <h4>Live Activity</h4>
+    <div id="liveFeed" class="tableBox" style="height:200px; overflow:auto"></div>
+  `;
+  initSSE();
+}
+
+function initSSE() {
+  const feed = document.getElementById('liveFeed');
+  const sse = new EventSource('/api/admin/stream');
+
+  sse.onmessage = (e) => {
+    const d = JSON.parse(e.data);
+    const div = document.createElement('div');
+    div.innerHTML = `<small>#${d.id || ''} ${d.event || ''} - ${d.short || ''}</small>`;
+    feed.prepend(div);
+  };
+}
+
+function renderTable(rows, title) {
+  if (!rows || rows.length === 0) {
+    return `<div class='card-box'>No data available</div>`;
+  }
+
+  let cols = Object.keys(rows[0]);
+
+  return `
    
 
-  </div>
-</div>
-<footer class="footer p-4 border-top footer-txt bg-black">
-      <div class="container">
-        <!-- footer-navigation start -->
-        <div class="row">
-          <!-- col-1 -->
-          <div class="col-sm-12 col-md-3 col-lg-3">
-            <!-- brand-information -->
-             <a class="navbar-brand text-white" href="#"
-          ><span class="display-6 fw-bold">Fix</span><span class="display-5">Route</span></a
-        >
+    <div class="tableBox" 
+         style="overflow-x:auto; max-width:100%; white-space:nowrap; border-radius:10px; padding:10px;">
+      
+      <table id="dataTable" class="table table-dark table-striped" style="min-width:900px; width:100%;">
+        <thead>
+          <tr>
+            ${cols.map(c => `<th>${c}</th>`).join('')}
+            <th>Action</th>
+          </tr>
+        </thead>
 
-            <!-- brand-title -->
-            <p class="text-lead text-capitalize mb-2">
-              FixRoute Analytics helps you understand real-time service demand, track technician performance, and identify high-request zones. With data-driven insights, your team can respond faster, allocate technicians better, and deliver a smoother on-road assistance experience.
-            </p>
-            <!-- social media icons -->
-            <div class="footer-social-icons my-3">
-              <i class="fs-4 p-2 border rounded bi bi-whatsapp"></i>
-              <i class="fs-4 p-2 border rounded bi bi-facebook"></i>
-              <i class="fs-4 p-2 border rounded bi bi-instagram"></i>
-              <i class="fs-4 p-2 border rounded bi bi-linkedin"></i>
-            </div>
-          </div>
-          <!-- col-2 -->
-          <div class="col-sm-12 col-md-3 col-lg-3">
-            <h4 class="fw-bold">Quick Links</h4>
-            <ul class="list-unstyled">
-              <li class="p-1">Home</li>
-              <li class="p-1">Services</li>
-            
-              <li class="p-1">Analytics</li>
-              <li class="p-1">Contact</li>
-            </ul>
-          </div>
-          <!-- col-3 -->
-          <div class="col-sm-12 col-md-3 col-lg-3">
-            <h4 class="fw-bold">Services</h4>
-            <ul class="list-unstyled">
-              <li class="p-1">Insights & Reports</li>
-              <li class="p-1">Recommendations</li>
-              <li class="p-1">usage dashboard</li>
-              <li class="p-1">Visualizations</li>
-            </ul>
-          </div>
-          <!-- col-4 -->
-          <div class="col-sm-12 col-md-3 col-lg-3">
-            <h4 class="fw-bold">Get to know us</h4>
-            <ul class="list-unstyled">
-              <li class="p-1">About Fixroute</li>
-              <li class="p-1">Terms&Conditions</li>
-              <li class="p-1">Privacy Policy</li>
+        <tbody>
+          ${rows.map(row => `
+            <tr>
+              ${cols.map(c => `<td>${row[c] ?? '-'}</td>`).join('')}
+              <td>
+                <button class='btn btn-sm  btn-book' 
+                  onclick='editRow("${title}", ${JSON.stringify(row).replace(/"/g, "&quot;")})'>
+                  Edit
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function applySearch() {
+  const input = document.getElementById("searchInput");
+  const filter = input.value.toLowerCase();
+  const table = document.getElementById("dataTable");
+  if (!table) return;
 
-              <li class="p-1">Careers</li>
-            </ul>
-          </div>
-        </div>
-        <hr class="border-top  border-2" />
-        <!-- footer-navigation end -->
-        <div class="text-center">
-          <p class="fs-6 fw-bold">
-            Copyright &copy; 2025 fixroute. All Right Reserved
-          </p>
-        </div>
-      </div>
-    </footer>
+  const trs = table.getElementsByTagName("tr");
 
-<script src="admin.js"></script>
+  for (let i = 1; i < trs.length; i++) { // skip header row
+    let rowText = trs[i].innerText.toLowerCase();
+    trs[i].style.display = rowText.includes(filter) ? "" : "none";
+  }
+}
+
+function editRow(table, row) {
+  let fields = Object.keys(row).map(k => `
+    <label>${k}</label>
+    <input class='form-control mb-2' name='${k}' value='${row[k] ?? ''}' />
+  `).join('');
+
+  const html = `
+    <div class='card-box'>
+      <h4>Edit ${table}</h4>
+      <form id='editForm'>${fields}</form>
+      <button class='btn btn-primary mt-2' onclick='saveEdit("${table}", ${row.id})'>Save</button>
+    </div>
+  `;
+
+  document.getElementById('content').innerHTML = html;
+}
+
+async function saveEdit(table, id) {
+  const form = document.getElementById('editForm');
+  const inputs = form.querySelectorAll('input');
+  const updates = {};
+  inputs.forEach(i => updates[i.name] = i.value);
+
+  const r = await api('/api/admin/update', 'PUT', { table, id, updates });
+  if (!r.success) return alert('Update failed');
+  alert('Updated!');
+
+  if (table === 'users') loadUsers();
+  if (table === 'servicemen') loadTechnicians();
+  if (table === 'bookings') loadBookings();
+  if (table === 'bills') loadBills();
+}
+
+async function loadUsers() {
+  const r = await api('/api/admin/users');
+  document.getElementById('content').innerHTML = renderTable(r.users, 'users');
+}
+
+async function loadTechnicians() {
+  const r = await api('/api/admin/servicemen');
+  document.getElementById('content').innerHTML = renderTable(r.servicemen, 'servicemen');
+}
+
+async function loadBookings() {
+  const r = await api('/api/admin/bookings');
+  document.getElementById('content').innerHTML = renderTable(r.bookings, 'bookings');
+}
+
+async function loadBills() {
+  const r = await api('/api/admin/bills');
+  document.getElementById('content').innerHTML = renderTable(r.bills, 'bills');
+}
+
+async function loadAnalytics() {
+  const r = await api('/api/admin/booking-stats');
+  document.getElementById('content').innerHTML = `
+    <div class='row g-3'>
+      <div class='col-md-3'><div class='card-box'>Today: <h3>${r.today}</h3></div></div>
+      <div class='col-md-3'><div class='card-box'>Week: <h3>${r.week}</h3></div></div>
+      <div class='col-md-3'><div class='card-box'>Month: <h3>${r.month}</h3></div></div>
+    </div>
+    <hr>
+    <canvas id='chart'></canvas>
+  `;
+
+  const ctx = document.getElementById('chart');
+  new Chart(ctx, {
+    type: 'line',
+    data: { labels: r.series.labels, datasets: [{ data: r.series.data, label: 'Bookings' }] },
+    options: { responsive: true, plugins:{legend:{display:false}} }
+  });
+}
+
+async function loadHeatmap() {
+  const r = await api('/api/admin/heatmap');
+  document.getElementById('content').innerHTML = `<div id='map' style='height:500px'></div>`;
+
+  const tok = await api('/api/mapbox-token');
+  mapboxgl.accessToken = tok.token;
+
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v10',
+    center: [78.4867, 17.3850],
+    zoom: 11
+  });
+
+  map.on('load', () => {
+    map.addSource('heat', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: r.map(p => ({
+          type:'Feature', geometry:{type:'Point', coordinates:[p.lng, p.lat]}
+        }))
+      }
+    });
+
+    map.addLayer({ id:'heatmap', type:'heatmap', source:'heat' });
+  });
+}
+
+async function loadPerformance() {
+  const r = await api('/api/admin/performance');
+  document.getElementById('content').innerHTML = renderTable(r, 'performance');
+}
+
+async function loadAlerts() {
+  const r = await api('/api/admin/failed-bookings');
+  let html = `<h4>Failed Bookings</h4>`;
+  if (!r.length) html += `<div class='card-box'>No failed bookings 🎉</div>`;
+  else r.forEach(b => html += `<div class='card-box mb-2'>#${b.id} - ${b.reason}</div>`);
+  document.getElementById('content').innerHTML = html;
+}
+
+// Navigation
+const actions = {
+  dashboard: loadDashboard,
+  users: loadUsers,
+  technicians: loadTechnicians,
+  bookings: loadBookings,
+  bills: loadBills,
+  analytics: loadAnalytics,
+  heatmap: loadHeatmap,
+  performance: loadPerformance,
+  alerts: loadAlerts,
+};
+
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.onclick = () => {
+    setActive(link);
+    actions[link.dataset.sec]();
+  };
+});
+
+// logout
+logout.onclick = () => { localStorage.clear(); window.location = 'index.html'; };
+
+// initial
+loadDashboard();
+</script>
+
 </body>
 </html>
