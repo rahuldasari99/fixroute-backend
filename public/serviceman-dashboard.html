@@ -826,7 +826,7 @@ async function sendBill(bookingId) {
   };
 
   // 4. Call ML Server (LOCALHOST ONLY)
-  const mlRes = await fetch("https://ml-service-6xki.onrender.com/predict_price", {
+  const mlRes = await fetch("https://ml-service-production-cd22.up.railway.app/predict_price", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(mlPayload)
