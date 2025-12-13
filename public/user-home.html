@@ -922,8 +922,7 @@ document.getElementById("techList").addEventListener("click", async (e) => {
   const serviceman_id = btn.dataset.id;
   const eta = Number(btn.dataset.eta) || 0;
   const name = btn.dataset.name;
-
-  // if (!confirm(`Confirm booking with ${name}?`)) return;
+  const service = document.getElementById("serviceName").value;
 
   if (SELECTED_LAT == null || SELECTED_LNG == null) {
     showMessage("Location missing — please Save Location.", "danger");
@@ -931,7 +930,10 @@ document.getElementById("techList").addEventListener("click", async (e) => {
   }
 
   const token = localStorage.getItem("token");
-  const service = document.getElementById("serviceName").value;
+
+  // ⭐ Fuel delivery inputs
+  const liters = document.getElementById("fuelLiters")?.value || null;
+  const fuelType = document.getElementById("fuelType")?.value || null;
 
   try {
     const resp = await fetch("/api/book-service", {
@@ -945,7 +947,9 @@ document.getElementById("techList").addEventListener("click", async (e) => {
         service_type: service,
         lat: SELECTED_LAT,
         lng: SELECTED_LNG,
-        eta_predicted: eta
+        eta_predicted: eta,
+        fuel_liters: liters,      // ⭐ Added
+        fuel_type: fuelType       // ⭐ Added
       })
     });
 
@@ -955,16 +959,12 @@ document.getElementById("techList").addEventListener("click", async (e) => {
       return;
     }
 
-    // Success message in HTML
     showMessage(`Booking Successful with ${name}!`, "success");
 
-
-    // Close service modal
     const modalEl = document.getElementById("serviceModal");
     const modalInstance = bootstrap.Modal.getInstance(modalEl);
     modalInstance.hide();
 
-    // Open bookings modal
     const bookingsModalEl = document.getElementById("bookingsModal");
     let bookingsModal = bootstrap.Modal.getInstance(bookingsModalEl);
     if (!bookingsModal) bookingsModal = new bootstrap.Modal(bookingsModalEl);
