@@ -493,19 +493,18 @@ section {
           aria-label="Toggle navigation"
         ></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <!-- <ul class="navbar-nav ms-auto mb-2 mb-lg-0 " > -->
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-           <li class="nav-item px-2">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 " >
+           <li class="nav-item px-4">
               <a class="nav-link" href="index--1.html">HOME</a>
             </li>
             
-            <li class="nav-item px-2">
-              <a class="nav-link" href="index.html">OUR AI</a>
+            <li class="nav-item px-4">
+              <a class="nav-link" href="index.html">OUR AI-PAGE</a>
             </li>
-            <li class="nav-item px-2">
+            <li class="nav-item px-4">
                 <a class="nav-link" href="about.html">ABOUT</a>
             </li>
-            <li class="nav-item px-2">
+            <li class="nav-item px-4">
               <a class="nav-link" href="contact.html">CONTACT US</a>
             </li>
          
@@ -1366,7 +1365,7 @@ function openOfferPage() {
     overflow: hidden;
     z-index: 9999; ">
 
-    <iframe 
+    <iframe
       src="https://my.spline.design/genkubgreetingrobot-23ytRLSuyyrwaASdfVBodbGD/"
       frameborder="0"
       style="width:100%; height:100%; border:0;">
@@ -1483,6 +1482,53 @@ function sendMessage() {
 
 
   <!-- footer start -->
+
+<style>
+  /* Footer link styling */
+.footer .list-unstyled li a {
+  color: #cfcfcf;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-bottom: 3px;
+}
+
+/* Hover color + underline animation */
+.footer .list-unstyled li a:hover {
+  color: orangered;
+}
+
+.footer .list-unstyled li a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: orangered;
+  transition: width 0.3s ease;
+}
+
+.footer .list-unstyled li a:hover::after {
+  width: 100%;
+}
+
+/* Improve footer text color */
+.footer p,
+.footer h4 {
+  color: #ffffff;
+}
+
+/* Optional: smooth fade-in on hover (footer feel) */
+.footer .list-unstyled li a:hover {
+  transform: translateX(4px);
+}
+
+</style>
+
+
+
 <footer class="footer p-4 border-top footer-txt bg-black">
       <div class="container">
         <!-- footer-navigation start -->
@@ -1510,12 +1556,12 @@ function sendMessage() {
           <div class="col-sm-12 col-md-3 col-lg-3">
             <h4 class="fw-bold">Quick Links</h4>
             <ul class="list-unstyled">
-              <li class="p-1">Home</li>
-              <li class="p-1">Services</li>
-            
-              <li class="p-1">Analytics</li>
-              <li class="p-1">Contact</li>
-            </ul>
+  <li class="p-1"><a href="index--1.html">Home</a></li>
+  <li class="p-1"><a href="index.html">Services</a></li>
+  <li class="p-1"><a href="about.html">About</a></li>
+  <li class="p-1"><a href="contact.html">Contact</a></li>
+</ul>
+
           </div>
           <!-- col-3 -->
           <div class="col-sm-12 col-md-3 col-lg-3">

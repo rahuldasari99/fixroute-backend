@@ -379,36 +379,153 @@ form button:hover {
   <!-- navigation bar end -->
 
   
-<!--===================heros section start================================-->
-    <div class="spline-container">
-        <!-- <h1>Dinesh Reddy</h1> -->
+    <!--=================== HERO SECTION START ===================-->
+<div class="spline-container">
+    <!-- Top Right Button -->
+  <a href="about.html" class="hero-btn">About us</a>
 
-        <iframe  class="herosection"
-            src="https://my.spline.design/boxeshover-KGXCkl3VZrorKkrTyXP3k4Y9/"
-            frameborder="0"
-            style="border: none; outline: none;">
-        </iframe>
-    </div>
+  <!-- Bottom Right Text -->
+  <div class="hero-text-right">
+    <h1 class="headline"><span class="text-gradient">FIX YOYR  <br>ROUTE</span></h1>
 
-     <style>
-    
+  </div>
 
-        .spline-container {
-            width: 100%;
-            height: 100vh;
-            position: relative;
-        }
+  <!-- Bottom-Left Text -->
+  <div class="hero-text">
+    <h1 class="headline"><span class="text-gradient">The Future Of Car Service Is Here</span></h1>
+    <div class="subtitle">We provide on-road,fule delivery,and  instant help whenever <br> your car brack  down</div>
+  </div>
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .herosection{
-          background: black;
-        }
-    </style>
-<!--===================heros section End================================-->
+  <!-- Spline -->
+  <iframe src="https://my.spline.design/boxeshover-xSuJViNekGouKZnyFfXn6qOp/" 
+          frameborder="0" allow="fullscreen"></iframe>
+</div>
+
+<!-- GSAP for Animation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+  gsap.from(".hero-text", {
+    opacity: 0,
+    y: 40,
+    duration: 1.4,
+    ease: "power3.out"
+  });
+</script>
+
+<style>
+  /* Fullscreen container */
+  .spline-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .spline-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* BOTTOM RIGHT TEXT */
+  .hero-text-right {
+    position: absolute;
+    bottom: 180px;
+    right: 80px;
+    z-index: 10;
+    color: white;
+    text-align: right;
+  }
+
+  .headline {
+    font-size: 55px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .subtitle {
+    margin-top: 8px;
+    font-size: 18px;
+    opacity: 0.9;
+  }
+
+  /* Gradient name */
+  .text-gradient {
+    background: linear-gradient(90deg, orangered, white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* TOP RIGHT BUTTON */
+  .hero-btn {
+    position: absolute;
+    top: 130px;
+    right: 280px;
+    z-index: 12;
+    background: orangered;
+    padding: 12px 26px;
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,.2);
+    transition: 0.25s ease;
+  }
+
+  .hero-btn:hover {
+    background: orange;
+    transform: scale(1.08);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .headline { font-size: 36px; }
+    .subtitle { font-size: 14px; }
+    .hero-text { bottom: 20px; right: 20px; }
+    .hero-btn { top: 20px; right: 20px; padding: 10px 20px; }
+  }
+
+  /* Text on bottom-left */
+  .hero-text {
+    position: absolute;
+    bottom: 130px;    /* adjust spacing */
+    left: 40px;      /* adjust spacing */
+    z-index: 10;
+    color: white;
+  }
+
+  .headline {
+    font-size: 55px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .subtitle {
+    margin-top: 8px;
+    font-size: 18px;
+    opacity: 0.9;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    background: linear-gradient(90deg,  orangered, white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Responsive fix */
+  @media(max-width: 768px){
+    .headline { font-size: 36px; }
+    .subtitle { font-size: 14px; }
+    .hero-text { bottom: 22px; left: 20px; }
+  }
+</style>
+<!--=================== HERO SECTION END ===================-->
 
   
 
@@ -776,6 +893,52 @@ function sendMessage() {
 
 <!--===========footer start===========-->
 
+
+<style>
+  /* Footer link styling */
+.footer .list-unstyled li a {
+  color: #cfcfcf;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-bottom: 3px;
+}
+
+/* Hover color + underline animation */
+.footer .list-unstyled li a:hover {
+  color: orangered;
+}
+
+.footer .list-unstyled li a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: orangered;
+  transition: width 0.3s ease;
+}
+
+.footer .list-unstyled li a:hover::after {
+  width: 100%;
+}
+
+/* Improve footer text color */
+.footer p,
+.footer h4 {
+  color: #ffffff;
+}
+
+/* Optional: smooth fade-in on hover (footer feel) */
+.footer .list-unstyled li a:hover {
+  transform: translateX(4px);
+}
+
+</style>
+
+
   <!-- footer start -->
 <footer class="footer p-4 border-top footer-txt bg-black">
       <div class="container">
@@ -803,13 +966,12 @@ function sendMessage() {
           <!-- col-2 -->
           <div class="col-sm-12 col-md-3 col-lg-3">
             <h4 class="fw-bold">Quick Links</h4>
-            <ul class="list-unstyled">
-              <li class="p-1">Home</li>
-              <li class="p-1">Services</li>
-            
-              <li class="p-1">Analytics</li>
-              <li class="p-1">Contact</li>
-            </ul>
+   <ul class="list-unstyled">
+  <li class="p-1"><a href="index--1.html">Home</a></li>
+  <li class="p-1"><a href="index.html">Services</a></li>
+  <li class="p-1"><a href="about.html">About</a></li>
+  <li class="p-1"><a href="contact.html">Contact</a></li>
+</ul>
           </div>
           <!-- col-3 -->
           <div class="col-sm-12 col-md-3 col-lg-3">
