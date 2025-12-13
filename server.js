@@ -1071,7 +1071,8 @@ app.post('/api/recommend-servicemen', auth, async (req, res) => {
 ============================= */
 app.post('/api/book-service', auth, async (req, res) => {
   try {
-    const { serviceman_id, service_type, lat, lng, eta_predicted } = req.body;
+   const { serviceman_id, service_type, lat, lng, eta_predicted, fuel_type, fuel_liters } = req.body;
+
     const user_id = req.user.id;
 
     if (!serviceman_id || lat == null || lng == null) {
@@ -1079,14 +1080,17 @@ app.post('/api/book-service', auth, async (req, res) => {
     }
 
     const row = {
-      user_id,
-      serviceman_id,
-      service_type,
-      lat,
-      lng,
-      eta_predicted,
-      status: 'pending'
-    };
+  user_id,
+  serviceman_id,
+  service_type,
+  lat,
+  lng,
+  eta_predicted,
+  fuel_type: fuel_type || null,
+  fuel_liters: fuel_liters ? Number(fuel_liters) : null,
+  status: 'pending'
+};
+
 
     const { data, error } = await supabase
       .from('bookings')
@@ -1102,6 +1106,7 @@ app.post('/api/book-service', auth, async (req, res) => {
   }
   
 });
+
 
 /* =======================================================
    ⭐ NEW API 1 — SERVICEMAN FETCHES USER REQUESTS

@@ -397,7 +397,7 @@
       /*********************
        * Helpers: add accepted card & pending card
        *********************/
-      function createAcceptedCard(booking) {
+        function createAcceptedCard(booking) {
   const id = booking.id;
   const container = document.createElement('div');
   container.className = 'border rounded p-3 mb-3 shadow-sm';
@@ -408,10 +408,26 @@
   const service = booking.service_type || 'General Service';
   const eta = Math.round(booking.eta_predicted || 0);
 
+  // ⭐ NEW: Read fuel fields if they exist
+  const fuelType = booking.fuel_type || null;
+  const fuelLiters = booking.fuel_liters || null;
+
+  // ⭐ NEW: Build HTML only if service is Fuel Delivery
+  let fuelHtml = "";
+  if (service === "Fuel Delivery") {
+    fuelHtml = `
+      <p><strong>Fuel Type:</strong> ${escapeHtml(fuelType || "N/A")}</p>
+      <p><strong>Fuel Liters:</strong> ${escapeHtml(fuelLiters || "N/A")}</p>
+    `;
+  }
+
   container.innerHTML = `
     <h5>${escapeHtml(service)}</h5>
     <p><strong>User:</strong> ${escapeHtml(userName)}</p>
     <p><strong>Phone:</strong> ${escapeHtml(phone)}</p>
+
+    ${fuelHtml} <!-- ⭐ SHOW ONLY FOR FUEL DELIVERY -->
+
     <p class="small-muted"><strong>ETA:</strong> ${eta} min</p>
     <p class="small-muted"><strong>User location:</strong> ${booking.lat}, ${booking.lng}</p>
 
@@ -438,7 +454,7 @@
   return container;
 }
 
-   let ACTIVE_BOOKING_ID = null;
+let ACTIVE_BOOKING_ID = null;
 
 async function startLiveUpdates(booking_id) {
   ACTIVE_BOOKING_ID = booking_id;

@@ -304,6 +304,20 @@
                 <input type="text" id="userLocation" class="form-control" readonly>
                 <button id="btnDetect" class="btn btn-outline-primary" type="button" title="Detect my location">⚲ Detect</button>
               </div>
+              <!-- Show only for Fuel Delivery -->
+ <div id="fuelTypeGroup" class="mt-3" style="display:none;">
+  <label>Fuel Type</label>
+  <select id="fuelType" class="form-control">
+    <option value="Petrol">Petrol</option>
+    <option value="Diesel">Diesel</option>
+  </select>
+</div>
+
+<div id="fuelLitersGroup" class="mt-3" style="display:none;">
+  <label>Fuel Liters</label>
+  <input type="number" id="fuelLiters" min="1" class="form-control" placeholder="Enter liters needed">
+</div>
+
 
               <!-- SEARCH BOX ABOVE MAP -->
               <div class="geocoder-wrapper">
@@ -671,51 +685,66 @@
       /* -----------------------------
          BOOK NOW flow — open modal and init map
       ------------------------------ */
-      document.addEventListener('click', async function (e) {
-        const btn = e.target.closest('.btn-open-service');
-        if (!btn) return;
-        const service = btn.getAttribute('data-service') || 'General Service';
-        document.getElementById('serviceName').value = service;
+     document.addEventListener('click', async function (e) {
+    const btn = e.target.closest('.btn-open-service');
+    if (!btn) return;
 
-        // fetch user profile to prefill (modal inputs already set in load(), but refresh just in case)
-        const token = localStorage.getItem('token');
-        if (token) {
-          try {
-            const r = await fetch('/api/me', { headers: { Authorization: 'Bearer ' + token }});
-            if (r.ok) {
-              const j = await r.json();
-              const nameInput = document.getElementById('userNameInput');
-              const phoneInput = document.getElementById('userMobileInput');
-              if (nameInput) nameInput.value = j.profile.full_name || '';
-              if (phoneInput) phoneInput.value = j.profile.phone || '';
-              const navNameEl = document.getElementById('userNameNav');
-              if (navNameEl) navNameEl.textContent = j.profile.full_name || 'User';
-            }
-          } catch (err) {
-            console.warn('could not load /api/me', err);
-          }
+    const service = btn.getAttribute('data-service') || 'General Service';
+    document.getElementById('serviceName').value = service;
+
+    /* -------------------------------------------------
+       FIX: Show fuel liters/type immediately first time
+    -------------------------------------------------- */
+    if (service === "Fuel Delivery") {
+        document.getElementById("fuelLitersGroup").style.display = "block";
+        document.getElementById("fuelTypeGroup").style.display = "block";
+    } else {
+        document.getElementById("fuelLitersGroup").style.display = "none";
+        document.getElementById("fuelTypeGroup").style.display = "none";
+    }
+
+    // fetch user profile to prefill (your original code)
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const r = await fetch('/api/me', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (r.ok) {
+          const j = await r.json();
+          const nameInput = document.getElementById('userNameInput');
+          const phoneInput = document.getElementById('userMobileInput');
+          if (nameInput) nameInput.value = j.profile.full_name || '';
+          if (phoneInput) phoneInput.value = j.profile.phone || '';
+          const navNameEl = document.getElementById('userNameNav');
+          if (navNameEl) navNameEl.textContent = j.profile.full_name || 'User';
         }
+      } catch (err) {
+        console.warn('could not load /api/me', err);
+      }
+    }
 
-        // prefer user's saved manual location if present
-        if (USER_PICKED_LOCATION && SELECTED_LAT != null && SELECTED_LNG != null) {
-          initModalMap(SELECTED_LAT, SELECTED_LNG);
-        } else {
-          // try geolocation as initial position
-          if (navigator.geolocation) {
+    // prefer saved location
+    if (USER_PICKED_LOCATION && SELECTED_LAT != null && SELECTED_LNG != null) {
+        initModalMap(SELECTED_LAT, SELECTED_LNG);
+    } else {
+        // try geolocation
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(pos => {
-              initModalMap(pos.coords.latitude, pos.coords.longitude);
+                initModalMap(pos.coords.latitude, pos.coords.longitude);
             }, () => {
-              initModalMap(null, null);
+                initModalMap(null, null);
             }, { enableHighAccuracy: true, maximumAge: 60000 });
-          } else {
+        } else {
             initModalMap(null, null);
-          }
         }
+    }
 
-        // show modal
-        const modal = new bootstrap.Modal(document.getElementById('serviceModal'));
-        modal.show();
-      });
+    // show modal (original)
+    const modal = new bootstrap.Modal(document.getElementById('serviceModal'));
+    modal.show();
+});
+
 
       /* -----------------------------
          STEP 2 — CALL BACKEND AND SHOW TECHNICIANS
