@@ -463,20 +463,19 @@ width: 100%;
   padding: 8px;
   border-radius: 6px;
 }
-.navul{
+/* .navul{
   display: flex;
   align-items: center;
   justify-content: center;
   
-}
+} */
 .navul li{
 gap: 1rem;
 }
-.dropdown-menu{
-  background-color: black;
 
-}
-.dropdown-menu .nav-link.active {
+
+
+.nav-link.active {
   background: orangered;
   color: #fff;
   border-radius: 4px;
