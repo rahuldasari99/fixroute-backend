@@ -1714,6 +1714,146 @@ app.get("/api/admin/bookings", auth, adminOnly, async (req, res) => {
   }
 });
 //admin
+app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("id, full_name, phone, email, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    res.json({ success: true, users: data });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+app.get("/api/admin/servicemen", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("servicemen")
+       .select("id, full_name, phone, email, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    res.json({ success: true, servicemen: data });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+app.put("/api/admin/update", auth, adminOnly, async (req, res) => {
+  try {
+    const { table, id, updates } = req.body;
+    const admin_id = req.user.id;
+
+    if (!table || !id || !updates) {
+      return res.status(400).json({ error: "table, id, updates required" });
+    }
+
+    const { data: oldRow, error: oldErr } = await supabase
+      .from(table)
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (oldErr) throw oldErr;
+
+    const { data: updated, error: upErr } = await supabase
+      .from(table)
+      .update(updates)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (upErr) throw upErr;
+
+    const { error: auditErr } = await supabase
+      .from("audit_logs")
+      .insert({
+        admin_id,
+        action: "update",
+        table_name: table,
+        record_id: id,
+        old_data: oldRow,
+        new_data: updated
+      });
+
+    if (auditErr) throw auditErr;
+
+    res.json({ success: true, updated });
+
+  } catch (err) {
+    console.error("ADMIN UPDATE ERROR:", err);
+    res.status(500).json({
+      error: err.message || "Update failed",
+      details: err
+    });
+  }
+});
+
+app.get("/api/admin/bills", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("bills")
+      .select("*, users(full_name), servicemen(full_name)")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    res.json({ success: true, bills: data });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+app.get("/api/admin/bookings", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("bookings")
+      .select("*, users(full_name), servicemen(full_name)")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    res.json({ success: true, bookings: data });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+app.post("/api/admin/promote", auth, adminOnly, async (req, res) => {
+  try {
+    const { user_id } = req.body;
+
+    const { data: user } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", user_id)
+      .single();
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    await supabase.from("admins").insert({
+      full_name: user.full_name,
+      phone: user.phone,
+      email: user.email
+    });
+
+    await supabase.from("audit_logs").insert({
+      admin_id: req.user.id,
+      action: "promote",
+      table_name: "users",
+      record_id: user_id,
+      old_data: user,
+      new_data: { promoted: true }
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+//admin
 
 /* ============================================================
    FULL ADMIN PANEL BACKEND — FIXED + ACCURATE + COMPLETE
@@ -1734,10 +1874,11 @@ function adminOnly(req, res, next) {
 ---------------------------------------- */
 app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
   try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .order("created_at", { ascending: false });
+   const { data, error } = await supabase
+  .from("users")
+  .select("id, full_name, phone, email, created_at")
+  .order("created_at", { ascending: false });
+
 
     if (error) throw error;
     res.json({ success: true, users: data });
@@ -1747,27 +1888,85 @@ app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
 });
 
 /* ADMIN UPDATE ANY ROW IN ANY TABLE */
-app.put("/api/admin/update", auth, adminOnly, async (req, res) => {
+// app.put("/api/admin/update", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { table, id, updates } = req.body;
+//     const admin_id = req.user.id;
+
+//     if (!table || !id || !updates)
+//       return res.status(400).json({ error: "table, id, updates required" });
+
+//     // 1️⃣ Fetch old row
+//     const { data: oldRow, error: oldErr } = await supabase
+//       .from(table)
+//       .select("*")
+//       .eq("id", id)
+//       .single();
+
+//     if (oldErr) throw oldErr;
+
+//     // 2️⃣ Update
+//     const { data: updated, error: upErr } = await supabase
+//       .from(table)
+//       .update(updates)
+//       .eq("id", id)
+//       .select()
+//       .single();
+
+//     if (upErr) throw upErr;
+
+//     // 3️⃣ Audit log (JSON SAFE)
+//     const { error: auditErr } = await supabase
+//       .from("audit_logs")
+//       .insert({
+//         admin_id,
+//         action: "update",
+//         table_name: table,
+//         record_id: id,
+//         old_data: oldRow,
+//         new_data: updated
+//       });
+
+//     if (auditErr) throw auditErr;
+
+//     res.json({ success: true, updated });
+
+//   } catch (err) {
+//     console.error("ADMIN UPDATE ERROR:", err);
+//     res.status(500).json({
+//       error: err.message || "Update failed",
+//       details: err
+//     });
+//   }
+// });
+
+app.get("/api/admin/audit-logs", auth, adminOnly, async (req, res) => {
   try {
-    const { table, id, updates } = req.body;
-
-    if (!table || !id || !updates)
-      return res.status(400).json({ error: "table, id, updates required" });
-
     const { data, error } = await supabase
-      .from(table)
-      .update(updates)
-      .eq("id", id)
-      .select()
-      .single();
+      .from("audit_logs")
+      .select(`
+        id,
+        admin_id,
+        action,
+        table_name,
+        record_id,
+        old_data,
+        new_data,
+        created_at
+      `)
+      .order("created_at", { ascending: false })
+      .limit(200);
 
     if (error) throw error;
 
-    res.json({ success: true, updated: data });
+    res.json({ success: true, logs: data });
+
   } catch (err) {
-    res.status(500).json({ error: String(err) });
+    console.error("AUDIT LOG ERROR:", err);
+    res.status(500).json({ success: false, error: String(err) });
   }
 });
+
 
 /* ----------------------------------------
    2️⃣ TECHNICIAN MANAGEMENT
@@ -2011,6 +2210,334 @@ app.get("/api/admin/stream", auth, adminOnly, (req, res) => {
 
   req.on("close", () => clearInterval(interval));
 });
+
+
+app.get("/api/admin/servicemen-live", auth, adminOnly, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("servicemen")
+      .select(`
+        id,
+        full_name,
+        phone,
+        location_lat,
+        location_lng,
+        rating,
+        is_available
+      `)
+      .not("location_lat", "is", null)
+      .not("location_lng", "is", null);
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      servicemen: data
+    });
+  } catch (err) {
+    console.error("ADMIN LIVE MAP ERROR:", err);
+    res.status(500).json({ success: false, error: "Failed to load live servicemen" });
+  }
+});
+
+
+
+// /* ============================================================
+//    FULL ADMIN PANEL BACKEND — FIXED + ACCURATE + COMPLETE
+// ============================================================ */
+
+// /* ----------------------------------------
+//    Middleware: admin only
+// ---------------------------------------- */
+// function adminOnly(req, res, next) {
+//   if (!req.user || req.user.role !== "admin") {
+//     return res.status(403).json({ error: "Admin only" });
+//   }
+//   next();
+// }
+
+// /* ----------------------------------------
+//    1️⃣ USERS LIST + CRUD
+// ---------------------------------------- */
+// app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { data, error } = await supabase
+//       .from("users")
+//       .select("*")
+//       .order("created_at", { ascending: false });
+
+//     if (error) throw error;
+//     res.json({ success: true, users: data });
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ADMIN UPDATE ANY ROW IN ANY TABLE */
+// app.put("/api/admin/update", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { table, id, updates } = req.body;
+
+//     if (!table || !id || !updates)
+//       return res.status(400).json({ error: "table, id, updates required" });
+
+//     const { data, error } = await supabase
+//       .from(table)
+//       .update(updates)
+//       .eq("id", id)
+//       .select()
+//       .single();
+
+//     if (error) throw error;
+
+//     res.json({ success: true, updated: data });
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    2️⃣ TECHNICIAN MANAGEMENT
+// ---------------------------------------- */
+// app.get("/api/admin/servicemen", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { data, error } = await supabase
+//       .from("servicemen")
+//       .select("*")
+//       .order("created_at", { ascending: false });
+
+//     if (error) throw error;
+//     res.json({ success: true, servicemen: data });
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    3️⃣ BOOKINGS MANAGEMENT + DETAILS
+// ---------------------------------------- */
+// app.get("/api/admin/bookings", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { data, error } = await supabase
+//       .from("bookings")
+//       .select(`
+//         *,
+//         users(full_name),
+//         servicemen(full_name)
+//       `)
+//       .order("created_at", { ascending: false });
+
+//     if (error) throw error;
+//     res.json({ success: true, bookings: data });
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ASSIGN TECHNICIAN TO BOOKING */
+// app.post("/api/admin/assign", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { booking_id, tech_id } = req.body;
+
+//     const { data, error } = await supabase
+//       .from("bookings")
+//       .update({ serviceman_id: tech_id, status: "assigned" })
+//       .eq("id", booking_id)
+//       .select()
+//       .single();
+
+//     if (error) throw error;
+//     res.json({ success: true, booking: data });
+
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    4️⃣ BILLS MANAGEMENT
+// ---------------------------------------- */
+// app.get("/api/admin/bills", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { data, error } = await supabase
+//       .from("bills")
+//       .select(`
+//         *,
+//         users(full_name),
+//         servicemen(full_name)
+//       `)
+//       .order("created_at", { ascending: false });
+
+//     if (error) throw error;
+//     res.json({ success: true, bills: data });
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    5️⃣ FAILED BOOKINGS
+// ---------------------------------------- */
+// app.get("/api/admin/failed-bookings", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { data } = await supabase
+//       .from("bookings")
+//       .select("id, reason, created_at")
+//       .eq("status", "failed")
+//       .order("created_at", { ascending: false });
+
+//     res.json(data || []);
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    6️⃣ HEATMAP (YOUR CHOICE: A — Simple Points)
+// ---------------------------------------- */
+// app.get("/api/admin/heatmap", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { data } = await supabase
+//       .from("bookings")
+//       .select("lat, lng")
+//       .not("lat", "is", null)
+//       .not("lng", "is", null);
+
+//     res.json(data || []);
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    7️⃣ TECHNICIAN PERFORMANCE SCORE
+// ---------------------------------------- */
+// app.get("/api/admin/performance", auth, adminOnly, async (req, res) => {
+//   try {
+//     const { data } = await supabase
+//       .from("servicemen")
+//       .select("id, full_name, rating, avg_eta, completed_jobs");
+
+//     res.json(data || []);
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    8️⃣ BOOKING ANALYTICS (Dashboard)
+// ---------------------------------------- */
+// app.get("/api/admin/booking-stats", auth, adminOnly, async (req, res) => {
+//   try {
+//     const today = new Date().toISOString().split("T")[0];
+
+//     const todayCount = await supabase
+//       .from("bookings")
+//       .select("*", { count: "exact", head: true })
+//       .gte("created_at", today);
+
+//     const weekCount = await supabase
+//       .from("bookings")
+//       .select("*", { count: "exact", head: true })
+//       .gte("created_at", new Date(Date.now() - 7 * 864e5).toISOString());
+
+//     const monthCount = await supabase
+//       .from("bookings")
+//       .select("*", { count: "exact", head: true })
+//       .gte("created_at", new Date(Date.now() - 30 * 864e5).toISOString());
+
+//     /* 30 DAY CHART SERIES */
+//     const { data } = await supabase
+//       .from("bookings")
+//       .select("created_at");
+
+//     const map = {};
+//     for (let i = 0; i < 30; i++) {
+//       const d = new Date(Date.now() - i * 864e5).toISOString().split("T")[0];
+//       map[d] = 0;
+//     }
+//     data.forEach(b => {
+//       const d = b.created_at.split("T")[0];
+//       if (map[d] !== undefined) map[d]++;
+//     });
+
+//     res.json({
+//       today: todayCount.count || 0,
+//       week: weekCount.count || 0,
+//       month: monthCount.count || 0,
+//       series: {
+//         labels: Object.keys(map).reverse(),
+//         data: Object.values(map).reverse()
+//       }
+//     });
+
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    9️⃣ DASHBOARD SUMMARY
+// ---------------------------------------- */
+// app.get("/api/admin/dashboard", auth, adminOnly, async (req, res) => {
+//   try {
+//     const t = await supabase
+//       .from("bookings")
+//       .select("*", { count: "exact", head: true });
+
+//     const activeTech = await supabase
+//       .from("servicemen")
+//       .select("*", { count: "exact", head: true })
+//       .eq("is_available", true);
+
+//     const completed = await supabase
+//       .from("bookings")
+//       .select("*", { count: "exact", head: true })
+//       .eq("status", "completed");
+
+//     const failed = await supabase
+//       .from("bookings")
+//       .select("*", { count: "exact", head: true })
+//       .eq("status", "failed");
+
+//     res.json({
+//       total_bookings: t.count || 0,
+//       active_techs: activeTech.count || 0,
+//       completed_jobs: completed.count || 0,
+//       failed_bookings: failed.count || 0
+//     });
+
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
+
+// /* ----------------------------------------
+//    🔟 REALTIME ADMIN STREAM (SSE)
+// ---------------------------------------- */
+// app.get("/api/admin/stream", auth, adminOnly, (req, res) => {
+//   res.writeHead(200, {
+//     "Content-Type": "text/event-stream",
+//     "Cache-Control": "no-cache",
+//     "Connection": "keep-alive"
+//   });
+
+//   const send = (data) => {
+//     res.write(`data: ${JSON.stringify(data)}\n\n`);
+//   };
+
+//   send({ event: "connected", time: Date.now() });
+
+//   const interval = setInterval(() => {
+//     send({
+//       id: Math.floor(Math.random() * 99999),
+//       event: "heartbeat",
+//       short: "admin online"
+//     });
+//   }, 5000);
+
+//   req.on("close", () => clearInterval(interval));
+// });
 
 
 

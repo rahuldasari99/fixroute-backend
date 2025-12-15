@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FixRoute Admin Dashboard</title>
+  
+   
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
@@ -12,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
 
   <style>
-   
+   .navlinkholder{margin-top: 3rem;}
     .sidebar { width:260px; position:fixed; top:0; bottom:0; left:0; padding:20px; background:#000000; border-right:1px solid #000000; overflow-y:auto; }
     .sidebar .nav-link { color:#9ca3af; margin:6px 0; padding:10px; border-radius:6px; }
     .sidebar .nav-link.active, .sidebar .nav-link:hover { background:#1f2937; color:orangered; }
@@ -28,8 +32,26 @@
         <button class="bi bi-list d-lg-none d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"></button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 navul">
+             <li class="nav-item">
+            <div class="dropdown d-md-none">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Dropdown
+  </button>
+  <ul class="dropdown-menu dropdown-menu-dark">
+   <a class="nav-link" data-sec="dashboard">Dashboard</a>
+    <a class="nav-link" data-sec="users">Users</a>
+    <a class="nav-link" data-sec="technicians">Technicians</a>
+    <a class="nav-link" data-sec="bookings">Bookings</a>
+    <a class="nav-link" data-sec="bills">Bills</a>
+    <a class="nav-link" data-sec="analytics">Analytics</a>
+    <a class="nav-link" data-sec="heatmap">Heatmap</a>
+    <a class="nav-link" data-sec="performance">Performance</a>
+    <a class="nav-link" data-sec="alerts">Failed Alerts</a>
+    <a class="nav-link" data-sec="audit">Audit Logs</a>
+  </ul>
+</div>
+</li>
 
             <!-- BOOKINGS will be handled by JS to load contents -->
              <li class="nav-item">
@@ -50,9 +72,10 @@
       </div>
     </nav>
 
-  <div class="sidebar">
-    <h4 class="text-light">Admin Dashboard</h4>
+  <div class="sidebar d-none d-md-block">
+    
     <hr class="border-secondary">
+    <div class="navlinkholder">
     <a class="nav-link" data-sec="dashboard">Dashboard</a>
     <a class="nav-link" data-sec="users">Users</a>
     <a class="nav-link" data-sec="technicians">Technicians</a>
@@ -62,8 +85,11 @@
     <a class="nav-link" data-sec="heatmap">Heatmap</a>
     <a class="nav-link" data-sec="performance">Performance</a>
     <a class="nav-link" data-sec="alerts">Failed Alerts</a>
+    <a class="nav-link" data-sec="audit">Audit Logs</a>
+
     <hr class="border-secondary">
     <button id="logout" class="btn btn-book w-100">LOGOUT</button>
+    </div>
   </div>
   
   <div class="content-area">
@@ -86,187 +112,327 @@
     
     <div id="content"></div>
   </div>
+  <!-- EDIT MODAL -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-white text-black">
+      <div class="modal-header modalheader">
+        <h5 class="modal-title" id="editModalTitle">Edit</h5>
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="editForm"></form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-book" onclick="saveEdit()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script>
+/* =====================
+   AUTH CHECK
+===================== */
+// ADD BELOW safe()
+let EDIT_CONTEXT = {
+  table: "",
+  id: "",
+  updates: {}
+};
+
+
 const token = localStorage.getItem("token");
 const role = localStorage.getItem("role");
-if (!token || role !== "admin") window.location = "index.html";
+if (!token || role !== "admin") location = "index.html";
 
+/* =====================
+   API HELPER
+===================== */
 async function api(url, method="GET", body=null) {
   const res = await fetch(url, {
     method,
-    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    },
     body: body ? JSON.stringify(body) : null
   });
   const txt = await res.text();
-  try { return JSON.parse(txt); } catch { return { success:false, error:"Invalid JSON" }; }
+  try { return JSON.parse(txt); }
+  catch { return { success:false, error:"Invalid JSON" }; }
 }
 
+/* =====================
+   NAV
+===================== */
 function setActive(el) {
   document.querySelectorAll('.nav-link').forEach(x => x.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById("pageTitle").innerText = el.innerText;
+  pageTitle.innerText = el.innerText;
 }
 
+/* =====================
+   DASHBOARD
+===================== */
 async function loadDashboard() {
   const d = await api('/api/admin/dashboard');
-  document.getElementById('content').innerHTML = `
+
+  content.innerHTML = `
     <div class="row g-3 text-white my-1">
-      <div class="col-md-3"><div class="card-box">Total Bookings: <h3>${d.total_bookings}</h3></div></div>
-      <div class="col-md-3"><div class="card-box">Active Techs: <h3>${d.active_techs}</h3></div></div>
-      <div class="col-md-3"><div class="card-box">Completed Jobs: <h3>${d.completed_jobs}</h3></div></div>
-      <div class="col-md-3"><div class="card-box text-danger">Failed: <h3>${d.failed_bookings}</h3></div></div>
+      <div class="col-md-3"><div class="card-box">Total Bookings<h3>${d.total_bookings}</h3></div></div>
+      <div class="col-md-3"><div class="card-box">Active Techs<h3>${d.active_techs}</h3></div></div>
+      <div class="col-md-3"><div class="card-box">Completed<h3>${d.completed_jobs}</h3></div></div>
+      <div class="col-md-3"><div class="card-box text-danger">Failed<h3>${d.failed_bookings}</h3></div></div>
     </div>
+
     <hr>
     <h4>Live Activity</h4>
-    <div id="liveFeed" class="tableBox" style="height:200px; overflow:auto"></div>
+    <div class="card-box">
+      <div id="adminLiveMap" style="height:250px;border-radius:12px;"></div>
+    </div>
   `;
-  initSSE();
+
+  await loadMapboxToken();
+  initAdminMap();
+  loadAdminLiveMap();
+  setInterval(loadAdminLiveMap, 5000);
 }
 
-function initSSE() {
-  const feed = document.getElementById('liveFeed');
-  const sse = new EventSource('/api/admin/stream');
-
-  sse.onmessage = (e) => {
-    const d = JSON.parse(e.data);
-    const div = document.createElement('div');
-    div.innerHTML = `<small>#${d.id || ''} ${d.event || ''} - ${d.short || ''}</small>`;
-    feed.prepend(div);
-  };
-}
-
+/* =====================
+   TABLE RENDER
+===================== */
 function renderTable(rows, title) {
-  if (!rows || rows.length === 0) {
-    return `<div class='card-box'>No data available</div>`;
+  if (!rows || !rows.length) {
+    return `<div class="card-box text-center text-muted">No data available</div>`;
   }
 
-  let cols = Object.keys(rows[0]);
+  const cols = Object.keys(rows[0]);
 
   return `
-   
+ 
 
-    <div class="tableBox" 
-         style="overflow-x:auto; max-width:100%; white-space:nowrap; border-radius:10px; padding:10px;">
-      
-      <table id="dataTable" class="table table-dark table-striped" style="min-width:900px; width:100%;">
-        <thead>
-          <tr>
-            ${cols.map(c => `<th>${c}</th>`).join('')}
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          ${rows.map(row => `
+      <div class="table-responsive">
+        <table id="dataTable" class="table admin-table">
+          <thead>
             <tr>
-              ${cols.map(c => `<td>${row[c] ?? '-'}</td>`).join('')}
-              <td>
-                <button class='btn btn-sm  btn-book' 
-                  onclick='editRow("${title}", ${JSON.stringify(row).replace(/"/g, "&quot;")})'>
-                  Edit
-                </button>
-              </td>
+              ${cols.map(c => `<th>${c.replaceAll('_',' ')}</th>`).join('')}
+              <th class="text-end">Action</th>
             </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+               ${cols.map(c => `
+<td>${formatCell(r[c], c)}</td>
+
+
+`).join('')}
+
+                <td>
+  <button class="btn btn-sm btn-book"
+    onclick='editRow("${title}", ${JSON.stringify(r).replace(/"/g, "&quot;")})'>
+    Edit
+  </button>
+</td>
+
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+   
   `;
 }
-function applySearch() {
-  const input = document.getElementById("searchInput");
-  const filter = input.value.toLowerCase();
-  const table = document.getElementById("dataTable");
-  if (!table) return;
+function formatCell(val, col) {
+  if (val === null || val === undefined) return "-";
 
-  const trs = table.getElementsByTagName("tr");
-
-  for (let i = 1; i < trs.length; i++) { // skip header row
-    let rowText = trs[i].innerText.toLowerCase();
-    trs[i].style.display = rowText.includes(filter) ? "" : "none";
+  // 🔥 Special handling for audit log JSON
+  if ((col === "old_data" || col === "new_data") && typeof val === "object") {
+    return Object.entries(val)
+      .map(([k, v]) => `${k}: ${v}`)
+      .join("<br>");
   }
+
+  // Generic object formatter (users, servicemen, etc.)
+  if (typeof val === "object") {
+    if (val.full_name) return val.full_name;
+    if (val.email) return val.email;
+    if (val.name) return val.name;
+    if (val.id) return val.id;
+    return Object.values(val).join(", ");
+  }
+
+  return val;
 }
 
-function editRow(table, row) {
-  let fields = Object.keys(row).map(k => `
-    <label>${k}</label>
-    <input class='form-control mb-2' name='${k}' value='${row[k] ?? ''}' />
-  `).join('');
 
-  const html = `
-    <div class='card-box'>
-      <h4>Edit ${table}</h4>
-      <form id='editForm'>${fields}</form>
-      <button class='btn btn-primary mt-2' onclick='saveEdit("${table}", ${row.id})'>Save</button>
-    </div>
-  `;
+function editRow(type, row) {
+  EDIT_CONTEXT = {
+    table: type === "users" ? "users" : "servicemen",
+    id: row.id,
+    updates: {}
+  };
 
-  document.getElementById('content').innerHTML = html;
+  document.getElementById("editModalTitle").innerText =
+    type === "users" ? "Edit User" : "Edit Serviceman";
+
+  let html = "";
+
+  if (type === "users") {
+    html = `
+      <div class="mb-2">
+        <label>Name</label>
+        <input class="form-control" value="${row.full_name || ""}"
+          onchange="EDIT_CONTEXT.updates.full_name=this.value">
+      </div>
+
+      <div class="mb-2">
+        <label>Phone</label>
+        <input class="form-control" value="${row.phone || ""}"
+          onchange="EDIT_CONTEXT.updates.phone=this.value">
+      </div>
+
+      <div class="mb-2">
+        <label>Email</label>
+        <input class="form-control" value="${row.email || ""}"
+        onchange="EDIT_CONTEXT.updates.email=this.value">
+      </div>
+
+     <div class="mb-2">
+  <label>Promote User</label>
+  <button class="btn btn-danger w-100"
+    onclick="promoteToAdmin('${row.id}')">
+    Promote to Admin
+  </button>
+</div>
+    `;
+  }
+
+  if (type === "servicemen") {
+    html = `
+      <div class="mb-2">
+        <label>Name</label>
+        <input class="form-control" value="${row.full_name || ""}"
+          onchange="EDIT_CONTEXT.updates.full_name=this.value">
+      </div>
+
+      <div class="mb-2">
+        <label>Phone</label>
+        <input class="form-control" value="${row.phone || ""}"
+          onchange="EDIT_CONTEXT.updates.phone=this.value">
+      </div>
+
+      <div class="mb-2">
+        <label>Base Cost</label>
+        <input type="number" class="form-control" value="${row.base_cost || 0}"
+          onchange="EDIT_CONTEXT.updates.base_cost=this.value">
+      </div>
+
+      <div class="mb-2">
+        <label>Status</label>
+        <select class="form-select"
+          onchange="EDIT_CONTEXT.updates.is_blocked=this.value==='true'">
+          <option value="false">Active</option>
+          <option value="true">Blocked</option>
+        </select>
+      </div>
+    `;
+  }
+
+  document.getElementById("editForm").innerHTML = html;
+  new bootstrap.Modal(document.getElementById("editModal")).show();
 }
+async function saveEdit() {
+  const token = localStorage.getItem("token");
 
-async function saveEdit(table, id) {
-  const form = document.getElementById('editForm');
-  const inputs = form.querySelectorAll('input');
-  const updates = {};
-  inputs.forEach(i => updates[i.name] = i.value);
+  if (!Object.keys(EDIT_CONTEXT.updates).length) {
+    alert("No changes made");
+    return;
+  }
 
-  const r = await api('/api/admin/update', 'PUT', { table, id, updates });
-  if (!r.success) return alert('Update failed');
-  alert('Updated!');
-
-  if (table === 'users') loadUsers();
-  if (table === 'servicemen') loadTechnicians();
-  if (table === 'bookings') loadBookings();
-  if (table === 'bills') loadBills();
-}
-
-async function loadUsers() {
-  const r = await api('/api/admin/users');
-  document.getElementById('content').innerHTML = renderTable(r.users, 'users');
-}
-
-async function loadTechnicians() {
-  const r = await api('/api/admin/servicemen');
-  document.getElementById('content').innerHTML = renderTable(r.servicemen, 'servicemen');
-}
-
-async function loadBookings() {
-  const r = await api('/api/admin/bookings');
-  document.getElementById('content').innerHTML = renderTable(r.bookings, 'bookings');
-}
-
-async function loadBills() {
-  const r = await api('/api/admin/bills');
-  document.getElementById('content').innerHTML = renderTable(r.bills, 'bills');
-}
-
-async function loadAnalytics() {
-  const r = await api('/api/admin/booking-stats');
-  document.getElementById('content').innerHTML = `
-    <div class='row g-3'>
-      <div class='col-md-3'><div class='card-box'>Today: <h3>${r.today}</h3></div></div>
-      <div class='col-md-3'><div class='card-box'>Week: <h3>${r.week}</h3></div></div>
-      <div class='col-md-3'><div class='card-box'>Month: <h3>${r.month}</h3></div></div>
-    </div>
-    <hr>
-    <canvas id='chart'></canvas>
-  `;
-
-  const ctx = document.getElementById('chart');
-  new Chart(ctx, {
-    type: 'line',
-    data: { labels: r.series.labels, datasets: [{ data: r.series.data, label: 'Bookings' }] },
-    options: { responsive: true, plugins:{legend:{display:false}} }
+  const res = await fetch("/api/admin/update", {
+    method: "PUT",
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(EDIT_CONTEXT)
   });
+
+  const j = await res.json();
+  if (!j.success) {
+    alert("Update failed");
+    return;
+  }
+
+  alert("Updated successfully");
+  bootstrap.Modal.getInstance(document.getElementById("editModal")).hide();
+
+  // Reload current tab
+  document.querySelector(".nav-link.active").click();
+}
+async function promoteToAdmin(userId) {
+  if (!confirm("Promote this user to admin?")) return;
+
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("/api/admin/promote", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ user_id: userId })
+  });
+
+  const j = await res.json();
+
+  if (!j.success) {
+    alert("Promotion failed");
+    return;
+  }
+
+  alert("User promoted to admin");
+  bootstrap.Modal.getInstance(
+    document.getElementById("editModal")
+  ).hide();
 }
 
+
+
+/* =====================
+   LOADERS
+===================== */
+
+async function loadAuditLogs() {
+  const r = await api("/api/admin/audit-logs");
+  if (!r.success) {
+    content.innerHTML = "Failed to load audit logs";
+    return;
+  }
+  content.innerHTML = renderTable(r.logs, "audit");
+}
+
+
+async function loadUsers(){ const r=await api('/api/admin/users'); content.innerHTML=renderTable(r.users,'users'); }
+async function loadTechnicians(){ const r=await api('/api/admin/servicemen'); content.innerHTML=renderTable(r.servicemen,'servicemen'); }
+async function loadBookings(){ const r=await api('/api/admin/bookings'); content.innerHTML=renderTable(r.bookings,'bookings'); }
+async function loadBills(){ const r=await api('/api/admin/bills'); content.innerHTML=renderTable(r.bills,'bills'); }
+
+/* =====================
+   HEATMAP
+===================== */
 async function loadHeatmap() {
   const r = await api('/api/admin/heatmap');
-  document.getElementById('content').innerHTML = `<div id='map' style='height:500px'></div>`;
+  content.innerHTML = `<div id="map" style="height:500px"></div>`;
 
-  const tok = await api('/api/mapbox-token');
-  mapboxgl.accessToken = tok.token;
+  const t = await api('/api/mapbox-token');
+  mapboxgl.accessToken = t.token;
 
   const map = new mapboxgl.Map({
     container: 'map',
@@ -281,54 +447,138 @@ async function loadHeatmap() {
       data: {
         type: 'FeatureCollection',
         features: r.map(p => ({
-          type:'Feature', geometry:{type:'Point', coordinates:[p.lng, p.lat]}
+          type:'Feature',
+          geometry:{type:'Point', coordinates:[p.lng, p.lat]}
         }))
       }
     });
-
     map.addLayer({ id:'heatmap', type:'heatmap', source:'heat' });
   });
 }
 
+/* =====================
+   PERFORMANCE
+===================== */
 async function loadPerformance() {
   const r = await api('/api/admin/performance');
-  document.getElementById('content').innerHTML = renderTable(r, 'performance');
+  content.innerHTML = renderTable(r, 'performance');
 }
 
+/* =====================
+   ALERTS
+===================== */
 async function loadAlerts() {
   const r = await api('/api/admin/failed-bookings');
-  let html = `<h4>Failed Bookings</h4>`;
-  if (!r.length) html += `<div class='card-box'>No failed bookings 🎉</div>`;
-  else r.forEach(b => html += `<div class='card-box mb-2'>#${b.id} - ${b.reason}</div>`);
-  document.getElementById('content').innerHTML = html;
+  content.innerHTML = `
+    <h4>Failed Bookings</h4>
+    ${r.length
+      ? r.map(b=>`<div class="card-box mb-2">#${b.id} - ${b.reason}</div>`).join('')
+      : `<div class="card-box">No failed bookings 🎉</div>`
+    }
+  `;
 }
 
-// Navigation
+/* =====================
+   SEARCH
+===================== */
+function applySearch() {
+  const input = document.getElementById("searchInput");
+  const filter = input.value.toLowerCase();
+  const table = document.getElementById("dataTable");
+  if (!table) return;
+
+  const trs = table.getElementsByTagName("tr");
+
+  for (let i = 1; i < trs.length; i++) { // skip header row
+    let rowText = trs[i].innerText.toLowerCase();
+    trs[i].style.display = rowText.includes(filter) ? "" : "none";
+  }
+}
+
+/* =====================
+   MAPBOX LIVE
+===================== */
+let adminMap=null, adminMarkers=[], MAPBOX_TOKEN="";
+
+async function loadMapboxToken(){
+  if(MAPBOX_TOKEN) return;
+  const r=await fetch('/api/mapbox-token');
+  const j=await r.json();
+  MAPBOX_TOKEN=j.token;
+  mapboxgl.accessToken=MAPBOX_TOKEN;
+}
+
+function initAdminMap(){
+  if(adminMap) return;
+  adminMap=new mapboxgl.Map({
+    container:"adminLiveMap",
+    style:"mapbox://styles/mapbox/streets-v12",
+    center:[77.5946,12.9716],
+    zoom:11
+  });
+}
+
+async function loadAdminLiveMap(){
+  if(!adminMap) return;
+  const r=await api('/api/admin/servicemen-live');
+  adminMarkers.forEach(m=>m.remove());
+  adminMarkers=[];
+  const bounds=new mapboxgl.LngLatBounds();
+
+  r.servicemen.forEach(sm=>{
+    if(!sm.location_lat) return;
+    const el=document.createElement("img");
+    el.src="/assets/automobile-with-wrench.png";
+    el.style.width="34px";
+
+    const m=new mapboxgl.Marker(el)
+      .setLngLat([sm.location_lng, sm.location_lat])
+      .setPopup(new mapboxgl.Popup().setHTML(`
+        <b>${sm.full_name}</b><br>
+        ⭐ ${sm.rating||0}<br>
+        ${sm.is_available?'🟢 Available':'🔴 Busy'}
+      `))
+      .addTo(adminMap);
+
+    adminMarkers.push(m);
+    bounds.extend([sm.location_lng, sm.location_lat]);
+  });
+
+  if(adminMarkers.length) adminMap.fitBounds(bounds,{padding:60});
+}
+
+/* =====================
+   NAV ACTIONS (🔥 FIXED)
+===================== */
 const actions = {
   dashboard: loadDashboard,
   users: loadUsers,
   technicians: loadTechnicians,
   bookings: loadBookings,
   bills: loadBills,
-  analytics: loadAnalytics,
   heatmap: loadHeatmap,
   performance: loadPerformance,
-  alerts: loadAlerts,
+  audit: loadAuditLogs,
+  alerts: loadAlerts
+  
 };
 
-document.querySelectorAll('.nav-link').forEach(link => {
-  link.onclick = () => {
-    setActive(link);
-    actions[link.dataset.sec]();
-  };
+document.querySelectorAll('.nav-link').forEach(l=>{
+  l.onclick=()=>{ setActive(l); actions[l.dataset.sec](); };
 });
 
-// logout
-logout.onclick = () => { localStorage.clear(); window.location = 'index.html'; };
+/* =====================
+   LOGOUT
+===================== */
+logout.onclick=()=>{ localStorage.clear(); location='index.html'; };
 
-// initial
+/* =====================
+   INIT
+===================== */
 loadDashboard();
 </script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 </html>
