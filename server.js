@@ -1872,20 +1872,20 @@ function adminOnly(req, res, next) {
 /* ----------------------------------------
    1️⃣ USERS LIST + CRUD
 ---------------------------------------- */
-app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
-  try {
-   const { data, error } = await supabase
-  .from("users")
-  .select("id, full_name, phone, email, created_at")
-  .order("created_at", { ascending: false });
+// app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
+//   try {
+//    const { data, error } = await supabase
+//   .from("users")
+//   .select("id, full_name, phone, email, created_at")
+//   .order("created_at", { ascending: false });
 
 
-    if (error) throw error;
-    res.json({ success: true, users: data });
-  } catch (err) {
-    res.status(500).json({ error: String(err) });
-  }
-});
+//     if (error) throw error;
+//     res.json({ success: true, users: data });
+//   } catch (err) {
+//     res.status(500).json({ error: String(err) });
+//   }
+// });
 
 /* ADMIN UPDATE ANY ROW IN ANY TABLE */
 // app.put("/api/admin/update", auth, adminOnly, async (req, res) => {
