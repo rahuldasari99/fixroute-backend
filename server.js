@@ -1635,84 +1635,6 @@ app.get("/api/bills", async (req, res) => {
 
 
 //admin
-app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-
-    res.json({ success: true, users: data });
-  } catch (err) {
-    res.status(500).json({ error: String(err) });
-  }
-});
-app.get("/api/admin/servicemen", auth, adminOnly, async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("servicemen")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-
-    res.json({ success: true, servicemen: data });
-  } catch (err) {
-    res.status(500).json({ error: String(err) });
-  }
-});
-app.put("/api/admin/update", auth, adminOnly, async (req, res) => {
-  try {
-    const { table, id, updates } = req.body;  
-    if (!table || !id || !updates) {
-      return res.status(400).json({ error: "table, id, updates required" });
-    }
-
-    const { data, error } = await supabase
-      .from(table)
-      .update(updates)
-      .eq("id", id)
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    res.json({ success: true, updated: data });
-
-  } catch (err) {
-    res.status(500).json({ error: String(err) });
-  }
-});
-app.get("/api/admin/bills", auth, adminOnly, async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("bills")
-      .select("*, users(full_name), servicemen(full_name)")
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-
-    res.json({ success: true, bills: data });
-  } catch (err) {
-    res.status(500).json({ error: String(err) });
-  }
-});
-app.get("/api/admin/bookings", auth, adminOnly, async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("bookings")
-      .select("*, users(full_name), servicemen(full_name)")
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-
-    res.json({ success: true, bookings: data });
-  } catch (err) {
-    res.status(500).json({ error: String(err) });
-  }
-});
 //admin
 app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
   try {
@@ -1872,20 +1794,20 @@ function adminOnly(req, res, next) {
 /* ----------------------------------------
    1️⃣ USERS LIST + CRUD
 ---------------------------------------- */
-// app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
-//   try {
-//    const { data, error } = await supabase
-//   .from("users")
-//   .select("id, full_name, phone, email, created_at")
-//   .order("created_at", { ascending: false });
+app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
+  try {
+   const { data, error } = await supabase
+  .from("users")
+  .select("id, full_name, phone, email, created_at")
+  .order("created_at", { ascending: false });
 
 
-//     if (error) throw error;
-//     res.json({ success: true, users: data });
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
+    if (error) throw error;
+    res.json({ success: true, users: data });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
 
 /* ADMIN UPDATE ANY ROW IN ANY TABLE */
 // app.put("/api/admin/update", auth, adminOnly, async (req, res) => {
@@ -2239,306 +2161,120 @@ app.get("/api/admin/servicemen-live", auth, adminOnly, async (req, res) => {
     res.status(500).json({ success: false, error: "Failed to load live servicemen" });
   }
 });
+//to create user
+/* =====================================
+   ADMIN — CREATE USER
+===================================== */
+app.post("/api/admin/create-user", auth, adminOnly, async (req, res) => {
+  try {
+    const { full_name, phone, email, password } = req.body;
 
+    if (!full_name || !email || !password)
+      return res.status(400).json({ error: "full_name, email, password required" });
 
+    // check existing
+    const { data: exists } = await supabase
+      .from("users")
+      .select("id")
+      .eq("email", email)
+      .maybeSingle();
 
-// /* ============================================================
-//    FULL ADMIN PANEL BACKEND — FIXED + ACCURATE + COMPLETE
-// ============================================================ */
+    if (exists)
+      return res.status(400).json({ error: "User already exists" });
 
-// /* ----------------------------------------
-//    Middleware: admin only
-// ---------------------------------------- */
-// function adminOnly(req, res, next) {
-//   if (!req.user || req.user.role !== "admin") {
-//     return res.status(403).json({ error: "Admin only" });
-//   }
-//   next();
-// }
+    const password_hash = await bcrypt.hash(password, 10);
 
-// /* ----------------------------------------
-//    1️⃣ USERS LIST + CRUD
-// ---------------------------------------- */
-// app.get("/api/admin/users", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from("users")
-//       .select("*")
-//       .order("created_at", { ascending: false });
+    const { data: user, error } = await supabase
+      .from("users")
+      .insert({
+        full_name,
+        phone,
+        email,
+        password_hash
+      })
+      .select()
+      .single();
 
-//     if (error) throw error;
-//     res.json({ success: true, users: data });
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
+    if (error) throw error;
 
-// /* ADMIN UPDATE ANY ROW IN ANY TABLE */
-// app.put("/api/admin/update", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { table, id, updates } = req.body;
+    // audit log
+    await supabase.from("audit_logs").insert({
+      admin_id: req.user.id,
+      action: "create",
+      table_name: "users",
+      record_id: user.id,
+      new_data: user
+    });
 
-//     if (!table || !id || !updates)
-//       return res.status(400).json({ error: "table, id, updates required" });
+    res.json({ success: true, user });
 
-//     const { data, error } = await supabase
-//       .from(table)
-//       .update(updates)
-//       .eq("id", id)
-//       .select()
-//       .single();
+  } catch (err) {
+    console.error("CREATE USER ERROR:", err);
+    res.status(500).json({ error: String(err) });
+  }
+});
+//to create technician
+/* =====================================
+   ADMIN — CREATE TECHNICIAN
+===================================== */
+app.post("/api/admin/create-serviceman", auth, adminOnly, async (req, res) => {
+  try {
+    const {
+      full_name,
+      phone,
+      email,
+      password,
+      base_cost = 0,
+      vehicle_types = []
+    } = req.body;
 
-//     if (error) throw error;
+    if (!full_name || !email || !password)
+      return res.status(400).json({ error: "full_name, email, password required" });
 
-//     res.json({ success: true, updated: data });
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
+    // check existing
+    const { data: exists } = await supabase
+      .from("servicemen")
+      .select("id")
+      .eq("email", email)
+      .maybeSingle();
 
-// /* ----------------------------------------
-//    2️⃣ TECHNICIAN MANAGEMENT
-// ---------------------------------------- */
-// app.get("/api/admin/servicemen", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from("servicemen")
-//       .select("*")
-//       .order("created_at", { ascending: false });
+    if (exists)
+      return res.status(400).json({ error: "Serviceman already exists" });
 
-//     if (error) throw error;
-//     res.json({ success: true, servicemen: data });
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
+    const password_hash = await bcrypt.hash(password, 10);
 
-// /* ----------------------------------------
-//    3️⃣ BOOKINGS MANAGEMENT + DETAILS
-// ---------------------------------------- */
-// app.get("/api/admin/bookings", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from("bookings")
-//       .select(`
-//         *,
-//         users(full_name),
-//         servicemen(full_name)
-//       `)
-//       .order("created_at", { ascending: false });
+    const { data: tech, error } = await supabase
+      .from("servicemen")
+      .insert({
+        full_name,
+        phone,
+        email,
+        password_hash,
+        base_cost,
+        vehicle_types,
+        is_available: false
+      })
+      .select()
+      .single();
 
-//     if (error) throw error;
-//     res.json({ success: true, bookings: data });
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
+    if (error) throw error;
 
-// /* ASSIGN TECHNICIAN TO BOOKING */
-// app.post("/api/admin/assign", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { booking_id, tech_id } = req.body;
+    // audit log
+    await supabase.from("audit_logs").insert({
+      admin_id: req.user.id,
+      action: "create",
+      table_name: "servicemen",
+      record_id: tech.id,
+      new_data: tech
+    });
 
-//     const { data, error } = await supabase
-//       .from("bookings")
-//       .update({ serviceman_id: tech_id, status: "assigned" })
-//       .eq("id", booking_id)
-//       .select()
-//       .single();
+    res.json({ success: true, serviceman: tech });
 
-//     if (error) throw error;
-//     res.json({ success: true, booking: data });
-
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
-
-// /* ----------------------------------------
-//    4️⃣ BILLS MANAGEMENT
-// ---------------------------------------- */
-// app.get("/api/admin/bills", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from("bills")
-//       .select(`
-//         *,
-//         users(full_name),
-//         servicemen(full_name)
-//       `)
-//       .order("created_at", { ascending: false });
-
-//     if (error) throw error;
-//     res.json({ success: true, bills: data });
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
-
-// /* ----------------------------------------
-//    5️⃣ FAILED BOOKINGS
-// ---------------------------------------- */
-// app.get("/api/admin/failed-bookings", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { data } = await supabase
-//       .from("bookings")
-//       .select("id, reason, created_at")
-//       .eq("status", "failed")
-//       .order("created_at", { ascending: false });
-
-//     res.json(data || []);
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
-
-// /* ----------------------------------------
-//    6️⃣ HEATMAP (YOUR CHOICE: A — Simple Points)
-// ---------------------------------------- */
-// app.get("/api/admin/heatmap", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { data } = await supabase
-//       .from("bookings")
-//       .select("lat, lng")
-//       .not("lat", "is", null)
-//       .not("lng", "is", null);
-
-//     res.json(data || []);
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
-
-// /* ----------------------------------------
-//    7️⃣ TECHNICIAN PERFORMANCE SCORE
-// ---------------------------------------- */
-// app.get("/api/admin/performance", auth, adminOnly, async (req, res) => {
-//   try {
-//     const { data } = await supabase
-//       .from("servicemen")
-//       .select("id, full_name, rating, avg_eta, completed_jobs");
-
-//     res.json(data || []);
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
-
-// /* ----------------------------------------
-//    8️⃣ BOOKING ANALYTICS (Dashboard)
-// ---------------------------------------- */
-// app.get("/api/admin/booking-stats", auth, adminOnly, async (req, res) => {
-//   try {
-//     const today = new Date().toISOString().split("T")[0];
-
-//     const todayCount = await supabase
-//       .from("bookings")
-//       .select("*", { count: "exact", head: true })
-//       .gte("created_at", today);
-
-//     const weekCount = await supabase
-//       .from("bookings")
-//       .select("*", { count: "exact", head: true })
-//       .gte("created_at", new Date(Date.now() - 7 * 864e5).toISOString());
-
-//     const monthCount = await supabase
-//       .from("bookings")
-//       .select("*", { count: "exact", head: true })
-//       .gte("created_at", new Date(Date.now() - 30 * 864e5).toISOString());
-
-//     /* 30 DAY CHART SERIES */
-//     const { data } = await supabase
-//       .from("bookings")
-//       .select("created_at");
-
-//     const map = {};
-//     for (let i = 0; i < 30; i++) {
-//       const d = new Date(Date.now() - i * 864e5).toISOString().split("T")[0];
-//       map[d] = 0;
-//     }
-//     data.forEach(b => {
-//       const d = b.created_at.split("T")[0];
-//       if (map[d] !== undefined) map[d]++;
-//     });
-
-//     res.json({
-//       today: todayCount.count || 0,
-//       week: weekCount.count || 0,
-//       month: monthCount.count || 0,
-//       series: {
-//         labels: Object.keys(map).reverse(),
-//         data: Object.values(map).reverse()
-//       }
-//     });
-
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
-
-// /* ----------------------------------------
-//    9️⃣ DASHBOARD SUMMARY
-// ---------------------------------------- */
-// app.get("/api/admin/dashboard", auth, adminOnly, async (req, res) => {
-//   try {
-//     const t = await supabase
-//       .from("bookings")
-//       .select("*", { count: "exact", head: true });
-
-//     const activeTech = await supabase
-//       .from("servicemen")
-//       .select("*", { count: "exact", head: true })
-//       .eq("is_available", true);
-
-//     const completed = await supabase
-//       .from("bookings")
-//       .select("*", { count: "exact", head: true })
-//       .eq("status", "completed");
-
-//     const failed = await supabase
-//       .from("bookings")
-//       .select("*", { count: "exact", head: true })
-//       .eq("status", "failed");
-
-//     res.json({
-//       total_bookings: t.count || 0,
-//       active_techs: activeTech.count || 0,
-//       completed_jobs: completed.count || 0,
-//       failed_bookings: failed.count || 0
-//     });
-
-//   } catch (err) {
-//     res.status(500).json({ error: String(err) });
-//   }
-// });
-
-// /* ----------------------------------------
-//    🔟 REALTIME ADMIN STREAM (SSE)
-// ---------------------------------------- */
-// app.get("/api/admin/stream", auth, adminOnly, (req, res) => {
-//   res.writeHead(200, {
-//     "Content-Type": "text/event-stream",
-//     "Cache-Control": "no-cache",
-//     "Connection": "keep-alive"
-//   });
-
-//   const send = (data) => {
-//     res.write(`data: ${JSON.stringify(data)}\n\n`);
-//   };
-
-//   send({ event: "connected", time: Date.now() });
-
-//   const interval = setInterval(() => {
-//     send({
-//       id: Math.floor(Math.random() * 99999),
-//       event: "heartbeat",
-//       short: "admin online"
-//     });
-//   }, 5000);
-
-//   req.on("close", () => clearInterval(interval));
-// });
-
+  } catch (err) {
+    console.error("CREATE TECH ERROR:", err);
+    res.status(500).json({ error: String(err) });
+  }
+});
 
 
 
